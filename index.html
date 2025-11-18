@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <title>小苍测评</title>
+  
+  
+<script>
+(function() {
+  var storageKey = 'mdweb-color-scheme';
+  var match = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var choice = 'system';
+  try {
+    var saved = localStorage.getItem(storageKey);
+    if (saved) choice = saved;
+  } catch (error) {
+    choice = 'system';
+  }
+  var actual = choice === 'system' ? (match && match.matches ? 'dark' : 'light') : choice;
+  document.documentElement.dataset.themeChoice = choice;
+  document.documentElement.dataset.theme = actual;
+})();
+</script>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  
+</head>
+
+<body class="vapor-theme layout-index">
+  <div class="site-container">
+    <!-- 左侧导航栏 -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a class="brand" href="/">
+          
+          <h1 class="brand-title">小苍测评</h1>
+        </a>
+        <div class="brand-description">
+          
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- 主导航菜单 -->
+        <div class="nav-section">
+          <h3 class="nav-section-title">导航</h3>
+          <ul class="nav-list">
+            
+            
+            <li>
+              
+              <a class="nav-link" href="/">
+                首页
+              </a>
+              
+              
+            </li>
+            
+            
+          </ul>
+        </div>
+
+        <!-- 标签导航 -->
+        
+      </nav>
+
+      <!-- 主题切换 -->
+      <div class="sidebar-footer">
+        <label class="theme-switch" aria-label="切换明暗主题">
+          <input type="checkbox" data-theme-toggle aria-label="切换明暗主题" />
+          <span class="switch-track">
+            <span class="switch-thumb">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+              </svg>
+            </span>
+          </span>
+        </label>
+      </div>
+    </aside>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+      <!-- 移动端头部 -->
+      <div class="mobile-header mobile-only">
+        <a href="/" class="mobile-header-brand">
+          
+          <h1 class="mobile-header-title">小苍测评</h1>
+        </a>
+        <!-- 移动端菜单按钮 -->
+        <button class="mobile-menu-button" id="mobile-menu-button" aria-label="打开菜单">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="content-wrapper">
+        <div class="page-header desktop-only">
+  <h1 class="page-title">最新文章</h1>
+</div>
+
+<div class="post-list">
+  
+  <div class="empty-state">
+    <div class="empty-icon">📝</div>
+    <h3>暂无文章</h3>
+    <p>还没有发布任何文章，请稍后再来查看。</p>
+  </div>
+  
+</div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 移动端抽屉遮罩 -->
+  <div class="mobile-drawer-overlay" id="mobile-drawer-overlay"></div>
+
+  <!-- 移动端抽屉菜单 -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-brand">
+        
+        <h3 class="mobile-drawer-title">小苍测评</h3>
+      </div>
+      <button class="mobile-drawer-close" id="mobile-drawer-close" aria-label="关闭菜单">×</button>
+    </div>
+    <div class="mobile-drawer-content">
+      <nav class="mobile-drawer-nav">
+        <div class="mobile-nav-section">
+          <h4 class="mobile-nav-section-title">导航菜单</h4>
+          <div class="mobile-nav-list">
+            
+            
+            
+            <a class="nav-link" href="/">
+              首页
+            </a>
+            
+            
+            
+          </div>
+        </div>
+        <div class="mobile-nav-section">
+          <h4 class="mobile-nav-section-title">📂 分类</h4>
+          
+          <div class="mobile-category-list">
+            <span class="no-categories-text">暂无分类</span>
+          </div>
+          
+        </div>
+        <div class="mobile-nav-section">
+          <h4 class="mobile-nav-section-title">🔖 标签</h4>
+          
+          <div class="mobile-tag-flow">
+            <span class="no-tags-text">暂无标签</span>
+          </div>
+          
+        </div>
+      </nav>
+      <div class="mobile-drawer-theme">
+        <span class="mobile-drawer-theme-label">主题切换</span>
+        <label class="theme-switch" aria-label="切换明暗主题">
+          <input type="checkbox" data-theme-toggle-mobile aria-label="切换明暗主题" />
+          <span class="switch-track">
+            <span class="switch-thumb">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+              </svg>
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 返回顶部按钮 -->
+  <button class="back-to-top" id="back-to-top" aria-label="返回顶部">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script src="/assets/js/theme.js" defer></script>
+  
+  
+</body>
+
+</html>
