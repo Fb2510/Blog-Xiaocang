@@ -20,7 +20,7 @@
 <meta name="twitter:description" content="小仓测评">
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://xiaocang.blog/#website","@type":"WebSite","description":"小仓测评","inLanguage":"zh-CN","name":"小仓测评","url":"https://xiaocang.blog/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://xiaocang.blog/#website","@type":"WebSite","description":"小仓测评","inLanguage":"zh-CN","name":"小仓测评","url":"https://xiaocang.blog/"},{"@id":"https://xiaocang.blog/#collection","@type":"CollectionPage","description":"小仓测评","inLanguage":"zh-CN","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","name":"测试","position":1,"url":"https://xiaocang.blog/posts/test/"}]},"name":"小仓测评","url":"https://xiaocang.blog/"}]}</script>
 
 <script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
 <link rel="stylesheet" href="https://xiaocang.blog/assets/theme/style.css">
@@ -78,7 +78,13 @@
 
 
 <section class="article-list" aria-label="文章列表">
-<div class="empty"><svg class="empty-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 7h18l7 7v27H12Z"/><path d="M29 7v9h8M19 24h11M19 31h8"/></svg><h2>还没有文章</h2><p>新的故事正在准备中。</p></div>
+<article class="article-card">
+<span class="card-index" aria-hidden="true"></span>
+<h2><a href="https://xiaocang.blog/posts/test/">测试</a></h2>
+<p class="card-summary">ceshi</p>
+<div class="card-footer"><span><span>liy</span><time datetime="2026-09-15T22:00:01&#43;08:00">2026-09-15</time></span><a class="read-more" href="https://xiaocang.blog/posts/test/" aria-label="阅读测试">阅读全文 <span aria-hidden="true">↗</span></a></div>
+</article>
+
 </section>
 
 
@@ -106,7 +112,17 @@
 <dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
 <header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
 <div class="reader-dialog-body">
-<div class="empty"><h3>还没有可搜索的文章</h3><p>文章发布后，可以在这里搜索标题和正文。</p></div>
+
+<div id="site-search-ui" data-module="https://xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://xiaocang.blog/pagefind/" base-url="https://xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
 </div>
 </dialog>
 
