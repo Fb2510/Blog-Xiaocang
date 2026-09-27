@@ -1,2 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://xiaocang.blog/</loc><lastmod>2026-09-22T17:11:27+08:00</lastmod></url><url><loc>https://xiaocang.blog/categories/airport-review/</loc><lastmod>2026-09-22T17:11:27+08:00</lastmod></url><url><loc>https://xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc><lastmod>2026-09-22T17:11:27+08:00</lastmod></url><url><loc>https://xiaocang.blog/tags/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc><lastmod>2026-09-22T17:11:27+08:00</lastmod></url></urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://xiaocang.blog/</loc>
+    <lastmod>2026-09-22T09:12:39Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xiaocang.blog/categories/airport-review/</loc>
+    <lastmod>2026-09-22T09:12:39Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
+    <lastmod>2026-09-22T09:11:27Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xiaocang.blog/tags/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
+    <lastmod>2026-09-22T09:12:39Z</lastmod>
+  </url>
+</urlset>
