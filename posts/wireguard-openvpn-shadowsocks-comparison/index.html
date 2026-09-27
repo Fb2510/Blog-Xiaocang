@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="default">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法 · 小仓测评</title>
+<meta name="description" content="WireGuard、OpenVPN 与 Shadowsocks 有哪些区别？比较 VPN 隧道、加密代理及 UDP/TCP 的使用条件，给出按场景选择与公平测试的方法，不用虚构测速排名判断协议。">
+<meta name="keywords" content="WireGuard和OpenVPN区别,Shadowsocks与VPN,VPN协议对比,UDP和TCP,代理协议选择">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/">
+<meta property="og:title" content="WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法">
+<meta property="og:description" content="WireGuard、OpenVPN 与 Shadowsocks 有哪些区别？比较 VPN 隧道、加密代理及 UDP/TCP 的使用条件，给出按场景选择与公平测试的方法，不用虚构测速排名判断协议。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法">
+<meta name="twitter:description" content="WireGuard、OpenVPN 与 Shadowsocks 有哪些区别？比较 VPN 隧道、加密代理及 UDP/TCP 的使用条件，给出按场景选择与公平测试的方法，不用虚构测速排名判断协议。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-09-27T23:22:02&#43;08:00"><meta property="article:modified_time" content="2026-09-27T23:23:44&#43;08:00"><meta property="article:tag" content="协议对比">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-09-27T23:23:44+08:00","datePublished":"2026-09-27T23:22:02+08:00","description":"WireGuard、OpenVPN 与 Shadowsocks 有哪些区别？比较 VPN 隧道、加密代理及 UDP/TCP 的使用条件，给出按场景选择与公平测试的方法，不用虚构测速排名判断协议。","headline":"WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/","name":"WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+
+</head>
+
+<body class="article-page">
+
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>文章</div>
+<h1 data-pagefind-meta="title">WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-09-27T23:22:02&#43;08:00">2026-09-27</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>资料核对：2026 年 9 月 27 日。本文依据官方文档比较协议定位，并提供可复用的测试方法；不提供虚构的速度排名，也不代表对具体商业服务的评测。</p>
+<p><strong>WireGuard、OpenVPN 和 Shadowsocks 怎么选？</strong> 先看你的客户端与服务端共同支持什么，再看实际应用和网络条件。WireGuard、OpenVPN 常用于构建 VPN 隧道，Shadowsocks 属于加密代理体系；协议名称本身不能保证翻墙成功率、节点速度或流媒体可用性。</p>
+<p>如果你还分不清协议、客户端和机场订阅，可先阅读 <a href="/posts/vpn-proxy-airport-differences/">VPN、机场和代理的区别</a>。下面的比较以“该验证什么”为重点。</p>
+<h2 id="heading">三种协议的主要区别</h2>
+<table>
+<thead>
+<tr>
+<th>比较项目</th>
+<th>WireGuard</th>
+<th>OpenVPN</th>
+<th>Shadowsocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>基本定位</td>
+<td>网络层 VPN 隧道</td>
+<td>VPN 方案，可按配置采用不同隧道方式</td>
+<td>本地与远端组件协作的加密代理</td>
+</tr>
+<tr>
+<td>传输方式</td>
+<td>原生协议使用 UDP</td>
+<td>可采用 UDP 或 TCP</td>
+<td>官方协议描述了 TCP 与 UDP 转发</td>
+</tr>
+<tr>
+<td>应用流量如何进入</td>
+<td>由网络接口与路由决定</td>
+<td>由客户端、隧道和路由配置决定</td>
+<td>由应用代理设置或配套接管机制决定</td>
+</tr>
+<tr>
+<td>首先检查什么</td>
+<td>UDP 路径、对端与路由是否正常</td>
+<td>服务端允许哪种传输与客户端配置</td>
+<td>协议版本、加密配置、TCP/UDP 支持</td>
+</tr>
+<tr>
+<td>不能据此承诺什么</td>
+<td>所有网络都能连接</td>
+<td>TCP 模式必定可达</td>
+<td>导入订阅后所有程序自动可用</td>
+</tr>
+</tbody>
+</table>
+<p>表中的传输差异分别依据 <a href="https://www.wireguard.com/protocol/">WireGuard 协议说明</a>、<a href="https://openvpn.net/as-docs/faq-udp-and-tcp.html">OpenVPN 的 UDP/TCP 说明</a> 与 <a href="https://shadowsocks.org/doc/what-is-shadowsocks.html">Shadowsocks 协议说明</a>。实际使用还取决于具体实现和服务端配置。</p>
+<h2 id="wireguard-udp-">WireGuard：先确认 UDP 路径和隧道路由</h2>
+<p>WireGuard 的原生报文使用 UDP。如果某个网络环境无法正常传递相应 UDP 流量，即使账号配置无误，也可能无法完成连接。此时应先检查可达性，不能仅根据下载速度判断协议好坏。</p>
+<p>它的官方网站强调实现简洁和易于审查等设计目标，但这并不等于任意硬件、客户端和线路都能达到同样的性能。<a href="https://www.wireguard.com/">WireGuard 设计介绍</a></p>
+<p>另外，WireGuard 官方明确说明，它不把流量混淆作为协议本身的重点。因此，“使用加密”不等于“流量无法被识别”，更不能写成“任何受限网络都能稳定使用”。<a href="https://www.wireguard.com/known-limitations/">WireGuard 已知限制</a></p>
+<p>对用户而言，值得验证的是：握手与数据传输是否都正常，所需应用是否经过正确路由，以及切换网络后能否恢复。只看到虚拟网卡启用，并不足以完成验证。</p>
+<h2 id="openvpnudp--tcp-">OpenVPN：UDP 与 TCP 要结合网络条件</h2>
+<p>OpenVPN 支持不同传输方式。官方文档将 UDP 作为性能取向的选择，并保留 TCP 以适应部分网络环境；具体可用模式还取决于服务端是否提供对应配置。</p>
+<p>如果原来的配置使用 UDP，切换到 TCP 不是简单修改一个标签就一定能成功。客户端参数、服务端监听方式和其他连接设置必须相互匹配，应使用服务提供的正式配置。</p>
+<p>TCP 也不是“天然更快”。当内部连接本身使用 TCP，而外层隧道也采用 TCP 时，丢包条件下的多层可靠传输可能影响表现。OpenVPN 的技术说明讨论了避免这类可靠性机制相互影响的设计。<a href="https://openvpn.net/community-docs/openvpn-cryptographic-layer.html">OpenVPN 加密与传输层说明</a></p>
+<p>实际选择时，在支持的配置范围内做对照即可。不要把某一次结果推广为所有地区、所有时段和所有版本的固定排名。</p>
+<h2 id="shadowsocks">Shadowsocks：关注代理接入和具体实现</h2>
+<p>Shadowsocks 的本地组件接收请求，与远端组件进行加密转发，再由远端访问目标。它与 VPN 隧道的定位不同，用户尤其需要关注应用如何把流量交给代理。</p>
+<p>如果浏览器使用了代理，而某个游戏、会议软件或命令行工具没有使用同样的设置，两者可能表现不同。带有 TUN 的客户端可以提供另一种接入方式，但那是客户端与系统路由共同实现的效果，不能仅归功于协议名称。</p>
+<p>协议文档描述 UDP 转发，也不意味着你的整条路径已经支持它。客户端、配置、服务端和应用需求仍要匹配。“同样是 SS 节点”也不能代替对版本与参数的核对。</p>
+<h2 id="heading-1">按使用场景决定测试重点</h2>
+<p>下面是本文根据这些技术差异整理的选择方法，不是官方推荐排名。</p>
+<table>
+<thead>
+<tr>
+<th>你的主要用途</th>
+<th>优先验证的结果</th>
+<th>测试时容易忽略的变量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>浏览与查资料</td>
+<td>常用页面能否持续、完整加载</td>
+<td>DNS、规则、浏览器缓存</td>
+</tr>
+<tr>
+<td>会议与实时交流</td>
+<td>声音和画面是否连续，连接是否频繁中断</td>
+<td>Wi-Fi 波动、上传质量、应用自己的传输</td>
+</tr>
+<tr>
+<td>下载与文件同步</td>
+<td>一段持续传输是否稳定完成</td>
+<td>目标限速、磁盘、服务端负载</td>
+</tr>
+<tr>
+<td>多种应用一起使用</td>
+<td>每个应用是否按预期进入连接路径</td>
+<td>系统代理与应用独立设置的差异</td>
+</tr>
+<tr>
+<td>移动网络切换</td>
+<td>Wi-Fi 与移动数据切换后的恢复情况</td>
+<td>操作系统后台限制、客户端行为</td>
+</tr>
+</tbody>
+</table>
+<p>这张表也解释了为什么别人说“很快”，你却可能不满意：你们测试的应用、网络和成功标准未必一样。</p>
+<h2 id="heading-2">一份可以自己复用的公平测试方案</h2>
+<h3 id="1-">1. 固定尽可能多的条件</h3>
+<p>使用同一设备、同一接入网络、同一目标服务。记录系统、客户端和协议配置版本。暂停无关的大流量任务，避免同时开着多套连接软件。</p>
+<p>如果服务商给不同协议分配了不同线路，就把结果标为“整套方案对比”，不要称为纯粹的协议性能对比。节点地区相同，也不代表走的是同一条实际线路。</p>
+<h3 id="2-">2. 交替测试，保留普通结果</h3>
+<p>可以按 A、B、A、B 的顺序交替尝试两个方案，降低时间变化带来的影响。每组做多次观察，记录典型表现和失败情况，不只保留最快的一次。</p>
+<p>再在真实常用时段复查，例如晚间。这里的多次测试是为了减少偶然性，不是协议性能评测的统一行业标准。</p>
+<h3 id="3-">3. 把记录留成一张表</h3>
+<table>
+<thead>
+<tr>
+<th>日期与时间</th>
+<th>网络与客户端版本</th>
+<th>协议/节点</th>
+<th>实际目标与操作</th>
+<th>完成情况</th>
+<th>异常与恢复情况</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>待填写</td>
+<td>待填写</td>
+<td>方案 A</td>
+<td>同一个网页/会议/文件</td>
+<td>待填写</td>
+<td>待填写</td>
+</tr>
+<tr>
+<td>待填写</td>
+<td>待填写</td>
+<td>方案 B</td>
+<td>与上一行相同</td>
+<td>待填写</td>
+<td>待填写</td>
+</tr>
+</tbody>
+</table>
+<p>这些是空白记录项，不是测速数据。若要加入下载速率，应同时写明工具、单位、测试对象和持续时间。延迟单位通常是毫秒，传输速率则要区分 Mbps 与 MB/s，避免把不同指标放进同一个排名。</p>
+<h3 id="4-">4. 用实际需求作出选择</h3>
+<p>如果两种方案都能稳定完成任务，可优先考虑维护成本、客户端兼容性和支持质量。如果一种方案速度数字更高，却经常中断，你的实际工作可能更适合另一种方案。</p>
+<h2 id="heading-3">常见问题</h2>
+<h3 id="wireguard--openvpn-">WireGuard 一定比 OpenVPN 快吗？</h3>
+<p>不能作这样的统一判断。硬件、实现、版本、加速能力、配置和网络路径都会影响结果。应在相近条件下比较，并说明无法控制的变量。</p>
+<h3 id="openvpn--tcp-443">OpenVPN 使用 TCP 443，就一定能连接吗？</h3>
+<p>不能保证。允许某个端口，并不等于接受该端口上的所有流量；服务端配置、网络策略和目标可达性仍然影响连接。</p>
+<h3 id="heading-4">换协议能解决所有“已连接但打不开网页”吗？</h3>
+<p>不能。DNS、应用接入、规则和目标网站自身的问题，可能在换协议之后仍然存在。遇到这种情况，先按 <a href="/posts/vpn-connected-no-internet-windows-11/">Windows 11 连接故障排查清单</a> 缩小范围。</p>
+<h3 id="heading-5">哪种协议能保证解锁所有流媒体？</h3>
+<p>没有这种保证。协议只是连接方案的一部分，目标平台的可用地区、账号条件和出口网络等也会影响结果。评估时应验证自己的真实使用场景，不应把服务商宣传当作测试结论。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/protocol-comparison/"># 协议对比</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/vpn-connected-no-internet-windows-11/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">三种协议的主要区别</a><a class="level-2" href="#wireguard-udp-">WireGuard：先确认 UDP 路径和隧道路由</a><a class="level-2" href="#openvpnudp--tcp-">OpenVPN：UDP 与 TCP 要结合网络条件</a><a class="level-2" href="#shadowsocks">Shadowsocks：关注代理接入和具体实现</a><a class="level-2" href="#heading-1">按使用场景决定测试重点</a><a class="level-2" href="#heading-2">一份可以自己复用的公平测试方案</a><a class="level-3" href="#1-">1. 固定尽可能多的条件</a><a class="level-3" href="#2-">2. 交替测试，保留普通结果</a><a class="level-3" href="#3-">3. 把记录留成一张表</a><a class="level-3" href="#4-">4. 用实际需求作出选择</a><a class="level-2" href="#heading-3">常见问题</a><a class="level-3" href="#wireguard--openvpn-">WireGuard 一定比 OpenVPN 快吗？</a><a class="level-3" href="#openvpn--tcp-443">OpenVPN 使用 TCP 443，就一定能连接吗？</a><a class="level-3" href="#heading-4">换协议能解决所有“已连接但打不开网页”吗？</a><a class="level-3" href="#heading-5">哪种协议能保证解锁所有流媒体？</a></nav></aside>
+</div>
+
+</main>
+</div>
+
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+
+<span>© 2026 小仓测评</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/b188ae29-f233-41a5-8a89-c3bb8c923bd7/","pageTitle":"WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>

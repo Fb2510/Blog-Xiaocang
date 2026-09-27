@@ -1,19 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://xiaocang.blog/</loc>
-    <lastmod>2026-09-22T09:12:39Z</lastmod>
+    <loc>https://www.xiaocang.blog/</loc>
+    <lastmod>2026-09-27T15:24:02Z</lastmod>
   </url>
   <url>
-    <loc>https://xiaocang.blog/categories/airport-review/</loc>
-    <lastmod>2026-09-22T09:12:39Z</lastmod>
+    <loc>https://www.xiaocang.blog/categories/airport-review/</loc>
+    <lastmod>2026-09-27T15:24:02Z</lastmod>
   </url>
   <url>
-    <loc>https://xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
+    <loc>https://www.xiaocang.blog/categories/network-guides/</loc>
+    <lastmod>2026-09-27T15:24:02Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
     <lastmod>2026-09-22T09:11:27Z</lastmod>
   </url>
   <url>
-    <loc>https://xiaocang.blog/tags/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
-    <lastmod>2026-09-22T09:12:39Z</lastmod>
+    <loc>https://www.xiaocang.blog/posts/vpn-connected-no-internet-windows-11/</loc>
+    <lastmod>2026-09-27T15:23:53Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/vpn-proxy-airport-differences/</loc>
+    <lastmod>2026-09-27T15:24:02Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/</loc>
+    <lastmod>2026-09-27T15:23:44Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
+    <lastmod>2026-09-27T15:24:02Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/network-troubleshooting/</loc>
+    <lastmod>2026-09-27T15:24:02Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/protocol-comparison/</loc>
+    <lastmod>2026-09-27T15:24:02Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/vpn-basics/</loc>
+    <lastmod>2026-09-27T15:24:02Z</lastmod>
   </url>
 </urlset>

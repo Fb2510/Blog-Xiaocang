@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="default">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VPN、机场和代理有什么区别？科学上网新手指南 · 小仓测评</title>
+<meta name="description" content="VPN、机场和代理有什么区别？用对照表理清客户端、节点与订阅的关系，解释系统代理、TUN、分流和 DNS 的作用，帮助科学上网新手按设备与应用需求检查连接方案。">
+<meta name="keywords" content="VPN和机场的区别,VPN和代理的区别,科学上网入门,系统代理,TUN模式">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/vpn-proxy-airport-differences/">
+<meta property="og:title" content="VPN、机场和代理有什么区别？科学上网新手指南">
+<meta property="og:description" content="VPN、机场和代理有什么区别？用对照表理清客户端、节点与订阅的关系，解释系统代理、TUN、分流和 DNS 的作用，帮助科学上网新手按设备与应用需求检查连接方案。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/vpn-proxy-airport-differences/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VPN、机场和代理有什么区别？科学上网新手指南">
+<meta name="twitter:description" content="VPN、机场和代理有什么区别？用对照表理清客户端、节点与订阅的关系，解释系统代理、TUN、分流和 DNS 的作用，帮助科学上网新手按设备与应用需求检查连接方案。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-09-27T23:21:55&#43;08:00"><meta property="article:modified_time" content="2026-09-27T23:24:02&#43;08:00"><meta property="article:tag" content="VPN基础">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/vpn-proxy-airport-differences/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-09-27T23:24:02+08:00","datePublished":"2026-09-27T23:21:55+08:00","description":"VPN、机场和代理有什么区别？用对照表理清客户端、节点与订阅的关系，解释系统代理、TUN、分流和 DNS 的作用，帮助科学上网新手按设备与应用需求检查连接方案。","headline":"VPN、机场和代理有什么区别？科学上网新手指南","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/vpn-proxy-airport-differences/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/vpn-proxy-airport-differences/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/vpn-proxy-airport-differences/","name":"VPN、机场和代理有什么区别？科学上网新手指南","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+
+</head>
+
+<body class="article-page">
+
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">VPN、机场和代理有什么区别？科学上网新手指南</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>文章</div>
+<h1 data-pagefind-meta="title">VPN、机场和代理有什么区别？科学上网新手指南</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-09-27T23:21:55&#43;08:00">2026-09-27</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>资料核对：2026 年 9 月 27 日。本文解释技术概念与选择方法，不包含商业服务测速或购买排名。</p>
+<p><strong>VPN、代理和“机场”有什么区别？</strong> VPN 通常通过隧道承载被路由进去的网络流量；代理替应用转发请求；中文网络讨论中的“机场”通常指提供代理节点或订阅的服务商。三者分别涉及连接技术、转发方式和服务形态，不能只看名称判断速度、隐私或可用性。</p>
+<p>如果你在搜索翻墙、科学上网或机场教程，第一步是分清自己买了什么服务、使用什么客户端，以及哪些流量实际经过它。下面先给出对照，再介绍如何检查。</p>
+<h2 id="vpn">VPN、代理、机场和客户端：一张表分清</h2>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>它主要指什么</th>
+<th>使用前需要确认什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPN</td>
+<td>在设备与另一端之间建立网络隧道的技术或产品</td>
+<td>是全隧道还是分流？DNS 和 IPv6 如何处理？</td>
+</tr>
+<tr>
+<td>代理</td>
+<td>代替应用连接目标服务的转发方式</td>
+<td>哪些应用支持？是否加密？域名由哪一端解析？</td>
+</tr>
+<tr>
+<td>机场</td>
+<td>社区对部分节点订阅服务的俗称，没有统一技术标准</td>
+<td>实际协议、节点、流量规则和客户端支持是什么？</td>
+</tr>
+<tr>
+<td>客户端</td>
+<td>导入配置、建立连接并执行规则的软件</td>
+<td>来源是否可信？版本和订阅格式是否兼容？</td>
+</tr>
+<tr>
+<td>节点</td>
+<td>配置中可选的连接端点或线路入口</td>
+<td>当前可达性、出口和实际目标访问表现如何？</td>
+</tr>
+</tbody>
+</table>
+<p>例如，订阅是一份服务配置的获取入口，客户端负责读取它，节点是其中可用的连接选项。购买订阅并不意味着客户端已经配置好；客户端成功启动，也不意味着每个应用都走代理。</p>
+<h2 id="vpn-">VPN 会接管整台设备的流量吗？</h2>
+<p>这取决于路由和产品配置。全隧道通常希望让大部分外部流量进入 VPN；分流则允许部分应用或目的地址走原来的网络。Mozilla 对其 VPN 的说明展示了设备层加密的使用方式，但不能把某个产品的默认行为套用到所有 VPN 上。<a href="https://www.mozilla.org/en-US/products/vpn/resource-center/what-does-a-vpn-do/">Mozilla：VPN 的作用</a></p>
+<p>因此，“VPN 已连接”更接近一个连接状态提示。它不能单独证明目标网站可达，也不能证明 DNS、IPv6 或所有后台程序都在预期路径上。</p>
+<p>日常使用可以先列出三个目标：浏览器打开网页、常用软件登录、需要的文件传输。分别验证，比只看连接按钮更有意义。</p>
+<h2 id="heading">代理一定会加密吗？</h2>
+<p>不一定。“代理”描述的是转发关系，是否加密要看协议以及每一段连接。</p>
+<p>以 Shadowsocks 为例，官方文档描述了本地组件与远端组件之间的加密转发：远端收到数据后再连接目标。它属于代理体系，不能仅凭使用了 Shadowsocks，就推断所有应用流量都会被接管。<a href="https://shadowsocks.org/doc/what-is-shadowsocks.html">Shadowsocks 官方说明</a></p>
+<p>还要区分代理隧道加密与网页 HTTPS：前者保护特定代理链路，后者保护浏览器与网站之间的内容传输。访问敏感账号时，应检查 HTTPS 是否正常，不能因为开启了代理就忽略证书异常。</p>
+<h2 id="tun">系统代理、TUN、规则模式分别解决什么问题？</h2>
+<p>这些选项常出现在代理客户端中，但含义不同。</p>
+<p><strong>系统代理</strong>是把代理地址告诉使用系统设置的应用。Windows 提供自动检测、配置脚本和手动代理等入口；具体应用是否采用这些设置，还要看它自身的实现。<a href="https://support.microsoft.com/en-us/windows/experience/connectivity-networking/use-a-proxy-server-in-windows">Microsoft：Windows 代理设置</a></p>
+<p><strong>TUN</strong>通过虚拟网络接口配合路由承接流量。它可能覆盖不使用系统代理的程序，但仍受路由、排除项和 DNS 配置影响。以 Mihomo 为例，自动路由、出口接口和 DNS 接管是分别配置的功能。<a href="https://wiki.metacubex.one/config/inbound/tun/">Mihomo TUN 文档</a></p>
+<p><strong>规则模式</strong>决定哪些目标直连、哪些交给代理。“全局”一词也需要结合客户端理解：把进入客户端的请求统一交给某个节点，不等于操作系统上所有流量都已经进入客户端。</p>
+<p>一个实用检查顺序是：先确认应用采用哪种接入方式，再确认请求是否出现在客户端连接记录中，最后查看匹配的规则和出口。无需一开始就打开所有高级开关。</p>
+<h2 id="-dns-">改 DNS 就等于翻墙吗？</h2>
+<p>不等于。DNS 负责把域名转换成网络地址；它不是完整的数据传输通道。DNS over HTTPS（DoH）把 DNS 查询放在 HTTPS 连接里，改善这一段查询传输的隐私，但不会自动代理后续的网页请求。<a href="https://support.mozilla.org/en-US/kb/firefox-dns-over-https">Mozilla：DNS over HTTPS</a></p>
+<p>如果问题出在域名解析，更换合适的解析方式可能有帮助。如果问题出在后续连接、线路或目标服务，改 DNS 未必能解决。浏览器与系统还可能使用不同的解析设置，因此“浏览器能打开，软件打不开”值得分开调查。</p>
+<h2 id="heading-1">新手如何选择：先写需求，再看服务名称</h2>
+<p>下面是一份可以直接填写的选择清单。它用于比较方案，不代表对任何服务商的推荐。</p>
+<table>
+<thead>
+<tr>
+<th>需要记录的项目</th>
+<th>你的答案</th>
+<th>它影响什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>常用设备与系统</td>
+<td>例如 Windows 电脑、手机</td>
+<td>是否有可靠且兼容的客户端</td>
+</tr>
+<tr>
+<td>需要联网的应用</td>
+<td>浏览器、会议软件、终端等</td>
+<td>系统代理是否足够，是否需要设备层接入</td>
+</tr>
+<tr>
+<td>实际用途</td>
+<td>阅读、会议、下载或远程工作</td>
+<td>要测吞吐量、延迟还是连接连续性</td>
+</tr>
+<tr>
+<td>主要使用时段</td>
+<td>白天、晚间或移动途中</td>
+<td>测试应覆盖真实使用条件</td>
+</tr>
+<tr>
+<td>可接受的维护成本</td>
+<td>是否愿意配置规则和排查日志</td>
+<td>应选择怎样的交付与支持方式</td>
+</tr>
+</tbody>
+</table>
+<p>如果你已经拿到订阅，先核对客户端是否支持其中的协议和配置格式。如果你只是想让某个应用联网，优先确认该应用支持的代理方式。需要多种程序同时工作时，再评估 TUN 或 VPN 是否更贴合需求。</p>
+<p>“支持很多节点”“使用新协议”和“距离很近”都不能替代真实用途测试。判断时记录同一设备、同一网络、同一时间段下的表现，避免把环境差异误当成服务差异。</p>
+<h2 id="heading-2">常见问题</h2>
+<h3 id="-vpn-">买了机场，还需要再买 VPN 吗？</h3>
+<p>没有统一答案。先看现有服务提供什么协议、客户端覆盖哪些应用，以及它是否满足你的用途。重复购买不同名称的产品，不一定能解决接入配置或线路问题。</p>
+<h3 id="heading-3">节点显示低延迟，为什么网页仍然很慢？</h3>
+<p>客户端的延迟测试往往只覆盖某个测试目标或部分连接过程。网页加载还涉及解析、多个资源请求、目标服务器响应和线路拥塞，单一数字无法代表全部体验。</p>
+<h3 id="-vpn--1">开启 VPN 或代理之后，会完全匿名吗？</h3>
+<p>不会。登录账号、Cookie 和设备特征等仍可能把访问关联起来。选择工具时，应分别考虑连接加密、服务商可信度和网站侧身份，而不是把“能连接”理解为“无法识别”。</p>
+<h2 id="heading-4">继续阅读</h2>
+<ul>
+<li><a href="/posts/vpn-connected-no-internet-windows-11/">VPN 已连接却无法上网？Windows 11 的 8 步排查清单</a></li>
+<li><a href="/posts/wireguard-openvpn-shadowsocks-comparison/">WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法</a></li>
+</ul>
+<p>对术语有了基本认识后，下一步就是验证你的实际应用。保留配置版本和测试记录，后续更容易判断问题来自客户端、规则还是线路。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/vpn-basics/"># VPN基础</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/vpn-connected-no-internet-windows-11/">← 上一篇</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#vpn">VPN、代理、机场和客户端：一张表分清</a><a class="level-2" href="#vpn-">VPN 会接管整台设备的流量吗？</a><a class="level-2" href="#heading">代理一定会加密吗？</a><a class="level-2" href="#tun">系统代理、TUN、规则模式分别解决什么问题？</a><a class="level-2" href="#-dns-">改 DNS 就等于翻墙吗？</a><a class="level-2" href="#heading-1">新手如何选择：先写需求，再看服务名称</a><a class="level-2" href="#heading-2">常见问题</a><a class="level-3" href="#-vpn-">买了机场，还需要再买 VPN 吗？</a><a class="level-3" href="#heading-3">节点显示低延迟，为什么网页仍然很慢？</a><a class="level-3" href="#-vpn--1">开启 VPN 或代理之后，会完全匿名吗？</a><a class="level-2" href="#heading-4">继续阅读</a></nav></aside>
+</div>
+
+</main>
+</div>
+
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+
+<span>© 2026 小仓测评</span>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/744dd982-0e6e-46bd-8588-018d24220479/","pageTitle":"VPN、机场和代理有什么区别？科学上网新手指南","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
