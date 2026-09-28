@@ -2,46 +2,210 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.xiaocang.blog/</loc>
-    <lastmod>2026-09-27T15:24:02Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/airport-review/</loc>
-    <lastmod>2026-09-27T15:24:02Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/categories/client-guides/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/categories/industry-updates/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/network-guides/</loc>
-    <lastmod>2026-09-27T15:24:02Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/categories/troubleshooting/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/page/2/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/page/3/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
-    <lastmod>2026-09-22T09:11:27Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/airport-monthly-vs-usage-plans/</loc>
+    <lastmod>2026-09-28T17:07:31Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/airport-review-testing-method/</loc>
+    <lastmod>2026-09-28T17:07:56Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/airport-selection-checklist/</loc>
+    <lastmod>2026-09-28T17:09:18Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/clash-verge-rev-macos-guide/</loc>
+    <lastmod>2026-09-28T17:08:49Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/clash-verge-rev-windows-guide/</loc>
+    <lastmod>2026-09-28T17:08:19Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/daily-2026-09-28-fast-speed-test-video-buffering/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/direct-relay-iepl-iplc-routes/</loc>
+    <lastmod>2026-09-28T17:07:44Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/dns-fake-ip-troubleshooting/</loc>
+    <lastmod>2026-09-28T17:07:18Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/hysteria2-quic-udp-guide/</loc>
+    <lastmod>2026-09-28T17:06:55Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/ip-reputation-captcha-guide/</loc>
+    <lastmod>2026-09-28T17:05:41Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/ipv6-proxy-dual-stack-check/</loc>
+    <lastmod>2026-09-28T17:06:40Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/proxy-client-update-migration-watch/</loc>
+    <lastmod>2026-09-28T17:05:28Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/rule-global-tun-differences/</loc>
+    <lastmod>2026-09-28T17:08:32Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/shadowsocks-trojan-vless-comparison/</loc>
+    <lastmod>2026-09-28T17:07:08Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/sing-box-iphone-configuration-guide/</loc>
+    <lastmod>2026-09-28T17:08:41Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/streaming-access-region-troubleshooting/</loc>
+    <lastmod>2026-09-28T17:06:07Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/subscription-link-privacy-reset/</loc>
+    <lastmod>2026-09-28T17:05:54Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/subscription-update-failed-guide/</loc>
+    <lastmod>2026-09-28T17:06:31Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/tls-handshake-certificate-errors/</loc>
+    <lastmod>2026-09-28T17:06:21Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/v2rayn-windows-subscription-guide/</loc>
+    <lastmod>2026-09-28T17:09:09Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/v2rayng-android-guide/</loc>
+    <lastmod>2026-09-28T17:09:00Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/vpn-connected-no-internet-windows-11/</loc>
-    <lastmod>2026-09-27T15:23:53Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/vpn-proxy-airport-differences/</loc>
-    <lastmod>2026-09-27T15:24:02Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/</loc>
-    <lastmod>2026-09-27T15:23:44Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
-    <lastmod>2026-09-27T15:24:02Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/airport-selection/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/apple-client/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/client-setup/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/client-updates/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/dns/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/ip-reputation/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/ipv6/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/network-routes/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/network-troubleshooting/</loc>
-    <lastmod>2026-09-27T15:24:02Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/protocol-comparison/</loc>
-    <lastmod>2026-09-27T15:24:02Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/routing-tun/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/sing-box/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/streaming/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/subscription-security/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/tls/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/traffic-billing/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/vpn-basics/</loc>
-    <lastmod>2026-09-27T15:24:02Z</lastmod>
+    <lastmod>2026-09-28T17:12:00Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/tags/windows-client/</loc>
+    <lastmod>2026-09-28T17:09:30Z</lastmod>
   </url>
 </urlset>

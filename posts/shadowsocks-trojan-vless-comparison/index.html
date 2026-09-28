@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xiaocang-observatory">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比 · 小仓测评</title>
+<meta name="description" content="Shadowsocks、Trojan与VLESS怎么选？比较协议定位、安全组合和客户端兼容要求，结合现行VLESS文档纠正常见误解，避免仅凭协议名判断速度。">
+<meta name="keywords" content="Shadowsocks Trojan VLESS区别,机场协议选择,VLESS加密,Trojan协议">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/shadowsocks-trojan-vless-comparison/">
+<meta property="og:title" content="Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比">
+<meta property="og:description" content="Shadowsocks、Trojan与VLESS怎么选？比较协议定位、安全组合和客户端兼容要求，结合现行VLESS文档纠正常见误解，避免仅凭协议名判断速度。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/shadowsocks-trojan-vless-comparison/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比">
+<meta name="twitter:description" content="Shadowsocks、Trojan与VLESS怎么选？比较协议定位、安全组合和客户端兼容要求，结合现行VLESS文档纠正常见误解，避免仅凭协议名判断速度。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-09-29T00:18:09&#43;08:00"><meta property="article:modified_time" content="2026-09-29T01:07:08&#43;08:00"><meta property="article:tag" content="协议对比"><meta property="article:tag" content="TLS证书">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/shadowsocks-trojan-vless-comparison/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-09-29T01:07:08+08:00","datePublished":"2026-09-29T00:18:09+08:00","description":"Shadowsocks、Trojan与VLESS怎么选？比较协议定位、安全组合和客户端兼容要求，结合现行VLESS文档纠正常见误解，避免仅凭协议名判断速度。","headline":"Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/shadowsocks-trojan-vless-comparison/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/shadowsocks-trojan-vless-comparison/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/shadowsocks-trojan-vless-comparison/","name":"Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+
+</head>
+
+<body class="xc-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
+<h1 data-pagefind-meta="title">Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-09-29T00:18:09&#43;08:00">2026-09-29</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>选机场协议时，先看当前客户端是否支持服务端提供的完整组合，再看实际网络表现。协议名只是配置的一部分，传输、安全层、认证和内核版本同样影响能否连接。</p>
+<p>本文讨论 Shadowsocks、Trojan 和 VLESS。若需要比较 VPN 隧道与代理的定位，可先阅读<a href="/posts/wireguard-openvpn-shadowsocks-comparison/">WireGuard、OpenVPN 与 Shadowsocks 对比</a>。</p>
+<h2 id="heading">三种协议应怎样理解</h2>
+<p>Shadowsocks 是加密代理体系，客户端与服务端需要匹配相应密码、加密方法及扩展配置。不能把不同历史版本、方法或插件全部当成一套可互换配置。<a href="https://shadowsocks.org/doc/what-is-shadowsocks.html">来源：Shadowsocks 项目介绍</a></p>
+<p>Trojan 的协议说明将 TLS 握手放在认证请求之前，后续数据由相应 TLS 连接保护。因此证书与服务器名称验证是配置的重要部分，连接失败时不能只检查密码。<a href="https://trojan-gfw.github.io/trojan/protocol">来源：Trojan 协议文档</a></p>
+<p>VLESS 则要结合具体传输与安全配置理解。2026 年 9 月核对的 Xray 文档已包含 VLESS Encryption；因此“VLESS 永远不提供加密”是过度简化的旧说法。普通用户应按服务端提供的组合核对，不能任意移除 TLS、REALITY 或其他安全参数。<a href="https://xtls.github.io/config/outbounds/vless.html">来源：Xray VLESS 出站文档</a></p>
+<h2 id="heading-1">用兼容表代替“哪个绝对更快”</h2>
+<table>
+<thead>
+<tr>
+<th>检查维度</th>
+<th>Shadowsocks</th>
+<th>Trojan</th>
+<th>VLESS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>认证参数</td>
+<td>密钥或密码及方法</td>
+<td>密码等配置</td>
+<td>用户标识及相应配置</td>
+</tr>
+<tr>
+<td>安全相关</td>
+<td>具体加密方法与版本</td>
+<td>TLS 与验证参数</td>
+<td>取决于完整安全组合</td>
+</tr>
+<tr>
+<td>易漏项目</td>
+<td>方法、插件兼容</td>
+<td>SNI、证书验证</td>
+<td>传输、flow、安全字段</td>
+</tr>
+<tr>
+<td>客户端要求</td>
+<td>支持对应实现</td>
+<td>支持相应 TLS 配置</td>
+<td>支持服务端使用的功能</td>
+</tr>
+<tr>
+<td>性能依据</td>
+<td>实际线路与任务测试</td>
+<td>实际线路与任务测试</td>
+<td>实际线路与任务测试</td>
+</tr>
+</tbody>
+</table>
+<p>这张表不是性能排名。不同协议节点常被部署在不同机器和线路上，把两条线路的测试差异全归因于协议，会得到不可靠的结论。</p>
+<h2 id="heading-2">下单前怎样检查客户端兼容</h2>
+<p>把客户端名称、GUI 版本、核心版本和服务端配置要求列在一起。客户端可以显示某种协议名称，不代表支持该协议后来新增的每个功能。反过来，订阅解析器不认识字段，也不一定意味着底层核心完全不能处理。</p>
+<p>首次使用优先导入提供方给出的兼容配置，避免手填遗漏。若必须手动配置，逐项核对服务器、端口、认证、安全与传输参数；订阅 URL 应来自可信渠道，不通过陌生转换服务试错。</p>
+<h2 id="heading-3">怎样做一个有意义的对照</h2>
+<p>在相同设备、接入网络与时间段，测试你真正使用的任务，并尽可能控制线路、服务端负载等条件。做不到时，结论应写成“这两个节点的体验差异”，而不是“某协议全面领先”。</p>
+<p>同时记录连接成功、应用表现和资源占用。仅看延迟数字无法回答长连接是否稳定，单次大文件速率也无法代表交互体验。可复制<a href="/posts/airport-review-testing-method/">机场评测记录模板</a>保存原始观察。</p>
+<h2 id="heading-4">连接失败时先看错误发生在哪里</h2>
+<p>解析错误先查版本和字段；认证错误先查凭据；证书错误先查时间、名称和信任链；只有一个应用异常时，再查接入与路由。排查顺序比不断轮换协议更有价值。</p>
+<p>详细步骤见<a href="/posts/tls-handshake-certificate-errors/">TLS 错误排查</a>与<a href="/posts/rule-global-tun-differences/">规则、全局和 TUN 的区别</a>。资料核对：2026 年 9 月 28 日。本文没有宣称某种协议能够保证匿名、永久可达或固定速度。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/protocol-comparison/"># 协议对比</a><a href="https://www.xiaocang.blog/tags/tls/"># TLS证书</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/hysteria2-quic-udp-guide/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/dns-fake-ip-troubleshooting/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">三种协议应怎样理解</a><a class="level-2" href="#heading-1">用兼容表代替“哪个绝对更快”</a><a class="level-2" href="#heading-2">下单前怎样检查客户端兼容</a><a class="level-2" href="#heading-3">怎样做一个有意义的对照</a><a class="level-2" href="#heading-4">连接失败时先看错误发生在哪里</a></nav></aside>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/184d35e3-c200-4b8b-8c46-7ffee8ebb038/","pageTitle":"Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>

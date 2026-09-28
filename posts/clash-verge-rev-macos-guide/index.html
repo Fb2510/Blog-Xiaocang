@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xiaocang-observatory">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>macOS 使用 Clash Verge Rev：芯片版本、系统代理与 DNS 恢复 · 小仓测评</title>
+<meta name="description" content="Mac使用Clash Verge Rev遇到代理或DNS问题？检查芯片架构、当前网络服务与TUN状态，使用只读命令记录配置，并按顺序恢复网络。">
+<meta name="keywords" content="Mac机场客户端,Clash Verge Rev Mac教程,macOS系统代理,Mac代理DNS">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/clash-verge-rev-macos-guide/">
+<meta property="og:title" content="macOS 使用 Clash Verge Rev：芯片版本、系统代理与 DNS 恢复">
+<meta property="og:description" content="Mac使用Clash Verge Rev遇到代理或DNS问题？检查芯片架构、当前网络服务与TUN状态，使用只读命令记录配置，并按顺序恢复网络。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/clash-verge-rev-macos-guide/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="macOS 使用 Clash Verge Rev：芯片版本、系统代理与 DNS 恢复">
+<meta name="twitter:description" content="Mac使用Clash Verge Rev遇到代理或DNS问题？检查芯片架构、当前网络服务与TUN状态，使用只读命令记录配置，并按顺序恢复网络。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-09-29T00:17:57&#43;08:00"><meta property="article:modified_time" content="2026-09-29T01:08:49&#43;08:00"><meta property="article:tag" content="客户端配置"><meta property="article:tag" content="Apple客户端">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/clash-verge-rev-macos-guide/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-09-29T01:08:49+08:00","datePublished":"2026-09-29T00:17:57+08:00","description":"Mac使用Clash Verge Rev遇到代理或DNS问题？检查芯片架构、当前网络服务与TUN状态，使用只读命令记录配置，并按顺序恢复网络。","headline":"macOS 使用 Clash Verge Rev：芯片版本、系统代理与 DNS 恢复","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/clash-verge-rev-macos-guide/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/clash-verge-rev-macos-guide/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/clash-verge-rev-macos-guide/","name":"macOS 使用 Clash Verge Rev：芯片版本、系统代理与 DNS 恢复","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+
+</head>
+
+<body class="xc-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">macOS 使用 Clash Verge Rev：芯片版本、系统代理与 DNS 恢复</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
+<h1 data-pagefind-meta="title">macOS 使用 Clash Verge Rev：芯片版本、系统代理与 DNS 恢复</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-09-29T00:17:57&#43;08:00">2026-09-29</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a></div>
+</header>
+<div class="prose"><p>Mac 上的代理故障经常与当前网络服务、系统代理和 DNS 状态有关。安装成功但 Safari 不联网，或退出客户端后仍然无法打开网页，不能仅靠换节点判断原因。</p>
+<p>本文以 Clash Verge Rev 为例，重点说明 macOS 的安装与恢复。Windows 用户可阅读<a href="/posts/clash-verge-rev-windows-guide/">Windows 使用教程</a>。</p>
+<h2 id="-intel--apple-">核对 Intel 与 Apple 芯片版本</h2>
+<p>在“关于本机”查看芯片和 macOS 版本，再从<a href="https://www.clashverge.dev/install.html">官方安装页面</a>选择匹配的发布文件。系统最低版本要求会变化，不要只凭“可以下载”判断当前系统受支持。</p>
+<p>遇到无法打开或来源验证提示，应先确认下载来源、文件完整性和官方说明。Apple 提供了安全打开应用的处理方法；不要复制来源不明的命令，把整个系统的安全检查长期关闭。<a href="https://support.apple.com/en-us/102445">来源：Apple 应用安全说明</a></p>
+<h2 id="heading">导入配置后做最小测试</h2>
+<p>添加服务商提供的兼容订阅，启用配置并选择一个节点。第一次先使用系统代理，打开一个 HTTPS 页面，同时查看客户端连接记录。确认浏览器请求进入了预期策略组之后，再增加自定义规则或其他接入功能。</p>
+<p>如果订阅仅能下载而解析失败，检查是否拿到了 Clash/Mihomo 配置。格式问题与节点是否到期属于不同环节，处理路径见<a href="/posts/subscription-update-failed-guide/">订阅失败排查</a>。</p>
+<h2 id="heading-1">系统代理设置要看当前网络服务</h2>
+<p>在较新的 macOS 中，可从系统设置进入“网络”，选择正在使用的网络服务，打开“详细信息”中的“代理”。Apple 文档列出了 HTTP、HTTPS、SOCKS 和自动代理配置等项目。<a href="https://support.apple.com/guide/mac-help/change-proxy-settings-on-mac-mchlp2591/mac">来源：Mac 代理设置</a></p>
+<p>Wi-Fi 与有线网络是不同服务。换成扩展坞网线后出现异常时，应检查新服务的状态，而不是只查看原来的 Wi-Fi 项目。企业设备上的受管理设置应由管理员核对，不要直接覆盖。</p>
+<h2 id="heading-2">两条只读命令帮助记录状态</h2>
+<p>终端中运行：</p>
+<pre><code class="language-sh">scutil --proxy
+scutil --dns
+</code></pre>
+<p>第一条显示代理相关信息，第二条显示解析器配置。输出可以帮助比较启用前、启用后和退出后的变化，但它们不证明具体应用一定经过代理。分享时注意其中可能含内部域名、网络地址或自动配置地址。</p>
+<p>把结果与客户端中的监听端口、TUN 状态一起看。端口仍指向本地但客户端已经退出，是一种可排查的原因；不要因为看到多个解析器就断言 DNS 泄露。</p>
+<h2 id="-tun--dns">启用 TUN 前记录 DNS</h2>
+<p>Clash Verge Rev 的 macOS FAQ 说明，启用 TUN 时可能调整系统 DNS，正常关闭时应恢复。客户端与内核版本不同可能改变具体行为，因此应先记录原配置，再观察实际变化。<a href="https://www.clashverge.dev/faq/macos.html">来源：官方 macOS FAQ</a></p>
+<p>如果 TUN 后局域网服务异常，先关闭 TUN 做对照，再分别检查局域网访问规则与 DNS。不要为了测试直接清空公司网络或固定 IP 配置。</p>
+<h2 id="heading-3">退出后无法联网的恢复顺序</h2>
+<p>先正常关闭代理及 TUN，并退出客户端；随后检查当前网络服务中的代理是否仍指向停止的本地端口。恢复到启用前记录的状态，再检查 DNS 是否一致。</p>
+<p>如果手动设置过 DNS，恢复的是你自己的原配置，不是从教程随便找一组公共地址。完成后测试普通网页、局域网资源和目标应用。仍有问题再重新启动客户端收集日志，参照<a href="/posts/dns-fake-ip-troubleshooting/">DNS 与 Fake-IP 排查</a>逐层定位。</p>
+<p>资料核对：2026 年 9 月 28 日。命令用于读取状态，不会自动修改网络设置。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/client-setup/"># 客户端配置</a><a href="https://www.xiaocang.blog/tags/apple-client/"># Apple客户端</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/sing-box-iphone-configuration-guide/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/v2rayng-android-guide/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#-intel--apple-">核对 Intel 与 Apple 芯片版本</a><a class="level-2" href="#heading">导入配置后做最小测试</a><a class="level-2" href="#heading-1">系统代理设置要看当前网络服务</a><a class="level-2" href="#heading-2">两条只读命令帮助记录状态</a><a class="level-2" href="#-tun--dns">启用 TUN 前记录 DNS</a><a class="level-2" href="#heading-3">退出后无法联网的恢复顺序</a></nav></aside>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/5693fc75-1ba0-433e-b3ee-0a5746a24ddc/","pageTitle":"macOS 使用 Clash Verge Rev：芯片版本、系统代理与 DNS 恢复","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>

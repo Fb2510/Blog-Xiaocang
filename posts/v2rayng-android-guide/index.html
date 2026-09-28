@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xiaocang-observatory">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>v2rayNG 安卓教程：订阅导入、VPN 授权与后台断连排查 · 小仓测评</title>
+<meta name="description" content="Android如何配置v2rayNG？说明订阅导入、VPN授权、按应用分流与锁屏断连排查，帮助区分后台限制、网络切换和节点连接问题。">
+<meta name="keywords" content="v2rayNG教程,安卓机场客户端,v2rayNG订阅,安卓VPN断连">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/v2rayng-android-guide/">
+<meta property="og:title" content="v2rayNG 安卓教程：订阅导入、VPN 授权与后台断连排查">
+<meta property="og:description" content="Android如何配置v2rayNG？说明订阅导入、VPN授权、按应用分流与锁屏断连排查，帮助区分后台限制、网络切换和节点连接问题。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/v2rayng-android-guide/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="v2rayNG 安卓教程：订阅导入、VPN 授权与后台断连排查">
+<meta name="twitter:description" content="Android如何配置v2rayNG？说明订阅导入、VPN授权、按应用分流与锁屏断连排查，帮助区分后台限制、网络切换和节点连接问题。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-09-29T00:17:54&#43;08:00"><meta property="article:modified_time" content="2026-09-29T01:09:00&#43;08:00"><meta property="article:tag" content="客户端配置"><meta property="article:tag" content="订阅安全">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/v2rayng-android-guide/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-09-29T01:09:00+08:00","datePublished":"2026-09-29T00:17:54+08:00","description":"Android如何配置v2rayNG？说明订阅导入、VPN授权、按应用分流与锁屏断连排查，帮助区分后台限制、网络切换和节点连接问题。","headline":"v2rayNG 安卓教程：订阅导入、VPN 授权与后台断连排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/v2rayng-android-guide/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/v2rayng-android-guide/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/v2rayng-android-guide/","name":"v2rayNG 安卓教程：订阅导入、VPN 授权与后台断连排查","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+
+</head>
+
+<body class="xc-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">v2rayNG 安卓教程：订阅导入、VPN 授权与后台断连排查</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
+<h1 data-pagefind-meta="title">v2rayNG 安卓教程：订阅导入、VPN 授权与后台断连排查</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-09-29T00:17:54&#43;08:00">2026-09-29</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a></div>
+</header>
+<div class="prose"><p>在 Android 上，v2rayNG 借助系统 VPN 接口接入应用流量。状态栏出现 VPN 图标只能说明系统服务处于活动状态，不能证明远端节点或每个应用都能正常使用。</p>
+<p>本文围绕手机上的首次配置与断连检查展开。请从<a href="https://github.com/2dust/v2rayNG">v2rayNG 官方项目</a>提供的发布入口下载，核对系统支持范围与设备架构；不要仅凭应用名称相同就认定安装包来自同一开发者。</p>
+<h2 id="heading">第一次导入：先分清链接类型</h2>
+<p>订阅地址通常用于下载一组节点，单个分享链接通常只包含一个节点。向服务商确认当前提供的是哪种格式，并确认客户端版本支持相关协议。</p>
+<p>在订阅分组或订阅设置中添加来源清晰的名称与地址，保存后执行更新；如果拿到的是单个节点分享链接，使用客户端对应的剪贴板或导入入口。界面位置随版本变化，找不到入口时先核对项目文档，不要把链接填进服务器地址字段。</p>
+<p>导入完成后选择一个节点，再启动连接。若列表为空、出现解析错误或订阅过期提示，应先处理配置获取问题，见<a href="/posts/subscription-update-failed-guide/">订阅更新失败指南</a>。</p>
+<h2 id="vpn-">VPN 授权为何会弹出来</h2>
+<p>Android 要求 VPN 应用获得系统授权，首次启动会出现确认界面。确认应用身份后再授权；以后是否再次询问，与系统和 VPN 切换状态有关。Android 官方文档还说明，同一用户或工作资料中只能有一个活动的 VPN 服务，启动另一个会停止原有服务。<a href="https://developer.android.com/develop/connectivity/vpn">来源：Android VPN 文档</a></p>
+<p>这意味着一些使用本地 VPN 的广告过滤工具、抓包工具或其他代理应用可能发生冲突。先暂停冲突应用再做对照，不能把自动断开直接归因于节点质量。</p>
+<h2 id="heading-1">如何确认目标应用经过了代理</h2>
+<p>连接后新打开一个目标页面，检查客户端日志、流量变化和应用表现。若启用了按应用代理，核对目标应用究竟被包含还是被排除；“仅代理选中应用”和“绕过选中应用”的含义相反。</p>
+<p>测试应覆盖浏览器和你真正要使用的软件。浏览器可用而某个 App 不可用时，还可能涉及应用分流、UDP、DNS 或平台端限制，不必马上更换订阅服务。</p>
+<h2 id="heading-2">锁屏后断连，按这组对照检查</h2>
+<p>先确定断的是本地服务还是远端会话。锁屏前后各记录一次时间、网络类型、VPN 状态和日志；再在前台停留相同时间做一次对照。</p>
+<table>
+<thead>
+<tr>
+<th>观察到的现象</th>
+<th>优先检查方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPN 图标消失</td>
+<td>系统后台限制、其他 VPN 接管、应用退出</td>
+</tr>
+<tr>
+<td>图标仍在但请求超时</td>
+<td>节点连接、网络变化、DNS</td>
+</tr>
+<tr>
+<td>只在移动网络出错</td>
+<td>运营商路径、协议传输、移动数据权限</td>
+</tr>
+<tr>
+<td>只在 Wi-Fi 出错</td>
+<td>路由器、公共网络认证、局域网限制</td>
+</tr>
+<tr>
+<td>只影响一个 App</td>
+<td>按应用分流和该应用自身状态</td>
+</tr>
+</tbody>
+</table>
+<p>如果证据指向系统后台限制，可在手机的应用电池与后台运行设置中，针对这个客户端调整限制后复测。不同品牌的入口不同，不需要为了一个程序全局关闭电量管理。</p>
+<h2 id="heading-3">切换网络后别急着重装</h2>
+<p>Wi-Fi 与移动网络的地址、路径和可用协议条件可能不同。先等待系统完成切换，再在客户端重新建立连接，检查是否恢复。若每次只在某个网络失败，保留这个对照结果比重装更有诊断价值。</p>
+<p>订阅二维码和日志中可能含凭据，分享前应遮蔽完整链接、密码与标识。可参照<a href="/posts/subscription-link-privacy-reset/">订阅隐私处理</a>整理反馈。</p>
+<p>资料核对：2026 年 9 月 28 日。本文提供通用操作和诊断顺序，具体菜单以安装版本为准。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/client-setup/"># 客户端配置</a><a href="https://www.xiaocang.blog/tags/subscription-security/"># 订阅安全</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/clash-verge-rev-macos-guide/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/v2rayn-windows-subscription-guide/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">第一次导入：先分清链接类型</a><a class="level-2" href="#vpn-">VPN 授权为何会弹出来</a><a class="level-2" href="#heading-1">如何确认目标应用经过了代理</a><a class="level-2" href="#heading-2">锁屏后断连，按这组对照检查</a><a class="level-2" href="#heading-3">切换网络后别急着重装</a></nav></aside>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/91d9dcc7-ad9c-4ada-8347-597ec8bd399c/","pageTitle":"v2rayNG 安卓教程：订阅导入、VPN 授权与后台断连排查","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
