@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.xiaocang.blog/</loc>
-    <lastmod>2026-09-28T17:12:00Z</lastmod>
+    <lastmod>2026-09-29T16:44:16Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/airport-review/</loc>
@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/network-guides/</loc>
-    <lastmod>2026-09-28T17:12:00Z</lastmod>
+    <lastmod>2026-09-29T16:44:16Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/troubleshooting/</loc>
@@ -26,15 +26,15 @@
   </url>
   <url>
     <loc>https://www.xiaocang.blog/page/2/</loc>
-    <lastmod>2026-09-28T17:09:30Z</lastmod>
+    <lastmod>2026-09-29T16:44:16Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/page/3/</loc>
-    <lastmod>2026-09-28T17:09:30Z</lastmod>
+    <lastmod>2026-09-29T16:44:16Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
-    <lastmod>2026-09-28T17:12:00Z</lastmod>
+    <lastmod>2026-09-29T16:44:16Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/airport-monthly-vs-usage-plans/</loc>
@@ -61,6 +61,10 @@
     <lastmod>2026-09-28T17:09:30Z</lastmod>
   </url>
   <url>
+    <loc>https://www.xiaocang.blog/posts/daily-2026-09-29-terminal-proxy-curl-git/</loc>
+    <lastmod>2026-09-29T16:40:08Z</lastmod>
+  </url>
+  <url>
     <loc>https://www.xiaocang.blog/posts/direct-relay-iepl-iplc-routes/</loc>
     <lastmod>2026-09-28T17:07:44Z</lastmod>
   </url>
@@ -82,7 +86,7 @@
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/proxy-client-update-migration-watch/</loc>
-    <lastmod>2026-09-28T17:05:28Z</lastmod>
+    <lastmod>2026-09-29T16:44:16Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/rule-global-tun-differences/</loc>
@@ -170,7 +174,7 @@
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/network-troubleshooting/</loc>
-    <lastmod>2026-09-28T17:12:00Z</lastmod>
+    <lastmod>2026-09-29T16:44:16Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/protocol-comparison/</loc>
@@ -206,6 +210,6 @@
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/windows-client/</loc>
-    <lastmod>2026-09-28T17:09:30Z</lastmod>
+    <lastmod>2026-09-29T16:44:16Z</lastmod>
   </url>
 </urlset>
