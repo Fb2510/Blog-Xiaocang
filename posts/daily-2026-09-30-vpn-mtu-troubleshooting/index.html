@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xiaocang-observatory">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VPN 能连接，但网页加载一半、大文件卡住？MTU 排查指南 · 小仓测评</title>
+<meta name="description" content="VPN 能连接却网页加载不全、大文件传输卡住？按 Windows 接口信息、不同大小 Ping 与实际应用复测排查 MTU，区分分片提示和超时，避免直接套用固定数值。">
+<meta name="keywords" content="VPN MTU,路径MTU,网页加载不全,大文件传输卡住,Windows网络排障">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-09-30-vpn-mtu-troubleshooting/">
+<meta property="og:title" content="VPN 能连接，但网页加载一半、大文件卡住？MTU 排查指南">
+<meta property="og:description" content="VPN 能连接却网页加载不全、大文件传输卡住？按 Windows 接口信息、不同大小 Ping 与实际应用复测排查 MTU，区分分片提示和超时，避免直接套用固定数值。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-09-30-vpn-mtu-troubleshooting/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VPN 能连接，但网页加载一半、大文件卡住？MTU 排查指南">
+<meta name="twitter:description" content="VPN 能连接却网页加载不全、大文件传输卡住？按 Windows 接口信息、不同大小 Ping 与实际应用复测排查 MTU，区分分片提示和超时，避免直接套用固定数值。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-09-30T09:06:41&#43;08:00"><meta property="article:modified_time" content="2026-09-30T12:51:32&#43;08:00"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="Windows客户端"><meta property="article:tag" content="分流与TUN">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-09-30-vpn-mtu-troubleshooting/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-09-30T12:51:32+08:00","datePublished":"2026-09-30T09:06:41+08:00","description":"VPN 能连接却网页加载不全、大文件传输卡住？按 Windows 接口信息、不同大小 Ping 与实际应用复测排查 MTU，区分分片提示和超时，避免直接套用固定数值。","headline":"VPN 能连接，但网页加载一半、大文件卡住？MTU 排查指南","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-09-30-vpn-mtu-troubleshooting/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-09-30-vpn-mtu-troubleshooting/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-09-30-vpn-mtu-troubleshooting/","name":"VPN 能连接，但网页加载一半、大文件卡住？MTU 排查指南","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+
+</head>
+
+<body class="xc-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">VPN 能连接，但网页加载一半、大文件卡住？MTU 排查指南</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
+<h1 data-pagefind-meta="title">VPN 能连接，但网页加载一半、大文件卡住？MTU 排查指南</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-09-30T09:06:41&#43;08:00">2026-09-30</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p><strong>VPN 能连接，但网页只加载一半、文件传输开始后卡住，可以排查 MTU，但不能仅凭现象认定是 MTU 故障。</strong> 先确认应用确实经过预期节点，再比较同一路径上不同大小的数据包，最后回到原来的网页或文件验证。DNS、网站资源失败和线路拥塞也可能造成相似表现。</p>
+<p>作者：小仓 · 资料核对日期：2026-09-30</p>
+<p>本文提供 Windows 下的诊断流程，不含节点实测或通用“最佳 MTU”。如果所有网站都无法连接，应先阅读<a href="https://www.xiaocang.blog/posts/vpn-connected-no-internet-windows-11/">VPN 已连接却无法上网的排查清单</a>。</p>
+<h2 id="heading">一、为什么小请求成功，大传输却卡住？</h2>
+<p>MTU 是单条链路允许通过的 IP 包大小上限；路径 MTU 则受沿途最小上限约束。本机网卡显示的数值，不等于到所有网站的路径都支持同样大小。</p>
+<p>传统 IPv4 路径 MTU 发现机制会利用“不允许分片”的标志：包太大时，路由器丢弃它并返回需要分片的 ICMP 错误，发送方据此减小包大小。<a href="https://www.rfc-editor.org/rfc/rfc1191.html">RFC 1191</a>描述了这个过程。</p>
+<p>如果必要的错误反馈未能到达发送方，就可能出现小包可通、大包持续失败的“路径 MTU 黑洞”。TCP 连接建立成功，却在传输数据时停滞，是<a href="https://datatracker.ietf.org/doc/html/rfc2923">RFC 2923</a>记录的典型现象之一。</p>
+<p>VPN 隧道还要添加外层首部，留给内部数据包的空间会减少。<a href="https://developers.cloudflare.com/magic-transit/reference/mtu-mss/">Cloudflare 的隧道 MTU 文档</a>解释了封装开销；其中的 GRE 数值只适用于对应场景，不能直接套给其他 VPN 协议。</p>
+<h2 id="heading-1">二、先确认测试的是同一条路径</h2>
+<p>保持设备、网络、节点和目标不变，记录卡住的是网页主文档、图片资源，还是文件上传或下载。客户端显示“已连接”，并不能证明这些请求都使用同一个出站。</p>
+<p>尤其要分清两类接入方式：</p>
+<table>
+<thead>
+<tr>
+<th>接入方式</th>
+<th>使用 Ping 时的限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>浏览器使用 HTTP/SOCKS 代理</td>
+<td>系统 Ping 不会自动复用浏览器的代理配置</td>
+</tr>
+<tr>
+<td>VPN 或 TUN 接管系统流量</td>
+<td>仍需核对 ICMP 的路由和客户端处理方式，不能只凭开关状态判断</td>
+</tr>
+</tbody>
+</table>
+<p>有些客户端对 ICMP 的处理与 TCP/UDP 不同。无法确认探测是否穿过实际隧道时，应把结果标为“路径未确认”，不能据此算出机场线路的 MTU。相关概念见<a href="https://www.xiaocang.blog/posts/rule-global-tun-differences/">规则、全局与 TUN 的区别</a>。</p>
+<h2 id="windows">三、Windows：先记录接口，再比较探测包大小</h2>
+<h3 id="1-">1. 查看当前接口信息</h3>
+<p>在 PowerShell 中执行：</p>
+<pre><code class="language-powershell">netsh interface ipv4 show subinterfaces
+</code></pre>
+<p>这条命令只显示子接口信息，可用于记录接口名称与当前 MTU；它不会修改设置，也不会测出端到端路径 MTU。不要因为列表里出现多个数值，就把所有网卡统一修改。<a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netsh-interface">Microsoft netsh 文档</a></p>
+<h3 id="2--ipv4-">2. 对同一 IPv4 目标做少量探测</h3>
+<p>选择你有权测试、已知会响应 ICMP 的目标，优先使用服务支持人员提供的探测地址。下面会提示输入真实 IPv4 地址；若没有合适目标，可跳过本步，不要用任意公共地址代表实际业务路径。</p>
+<pre><code class="language-powershell">$probeTarget = Read-Host '输入允许探测且会响应 Ping 的目标 IPv4 地址'
+ping.exe /4 /n 3 /w 1500 /f /l 32 $probeTarget
+ping.exe /4 /n 3 /w 1500 /f /l 1200 $probeTarget
+ping.exe /4 /n 3 /w 1500 /f /l 1400 $probeTarget
+</code></pre>
+<p><code>/4</code> 选择 IPv4，<code>/n 3</code> 每轮发送三个请求，<code>/w 1500</code> 为每次回复等待最多 1500 毫秒，<code>/f</code> 设置禁止分片，<code>/l</code> 指定 ICMP 数据区长度。参数依据<a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ping">Microsoft Ping 文档</a>。</p>
+<p>32、1200、1400 都是探测负载示例，<strong>不是推荐的接口 MTU</strong>。数据区之外还有协议首部，进入 VPN 后还可能增加封装。不能把最大的成功 <code>/l</code> 值直接填进客户端。</p>
+<h3 id="3-">3. 按结果决定是否继续</h3>
+<table>
+<thead>
+<tr>
+<th>结果</th>
+<th>可以怎样解释</th>
+<th>下一步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>小包也全部超时</td>
+<td>目标不回应、路径异常或过滤等均有可能</td>
+<td>先确认目标与路径，不继续盲目调小数值</td>
+</tr>
+<tr>
+<td>小包成功，大包明确提示需要分片</td>
+<td>存在包大小限制的证据，可能来自本地接口或途中链路</td>
+<td>保留原始提示、接口信息和对应大小</td>
+</tr>
+<tr>
+<td>小包成功，大包只显示超时</td>
+<td>包大小相关问题值得调查，但也可能是过滤、丢包或回程差异</td>
+<td>重复少量对照，并结合应用与服务端日志</td>
+</tr>
+<tr>
+<td>大小包均成功</td>
+<td>这些 ICMP 请求完成了往返</td>
+<td>不能排除应用走不同路径或其他阶段故障</td>
+</tr>
+</tbody>
+</table>
+<p>若边界稳定，可在成功与失败的大小之间再选少量值缩小范围。结果随时段大幅波动时，不应继续寻找精确到一个字节的“最佳值”。这只是 ICMP 往返观察，无法单独定位受限链路，也不能保证 TCP、UDP 或下载回程的情况完全一致。</p>
+<h2 id="heading-2">四、有包大小限制的证据后，怎样处理？</h2>
+<p>优先查所用客户端对隧道 MTU 的官方说明，确认参数究竟控制哪个接口或哪一层数据包。客户端未提供相关设置时，把记录交给服务支持人员，继续检查隧道封装和路径 MTU 反馈。</p>
+<p>需要做配置对照时，按以下顺序进行：</p>
+<ol>
+<li>保存原配置与原值，记录要修改的具体接口或客户端参数。</li>
+<li>只调整文档明确支持的那一项，采用该环境建议的值，保持节点和网络不变。</li>
+<li>按客户端要求重连，再测试原本失败的同一网页、上传或下载，不能只复测 Ping。</li>
+<li>若改善可重复，再在可控条件下恢复原值做对照；没有改善就恢复，避免遗留无效修改。</li>
+</ol>
+<p>一次恢复正常可能伴随重连换路，仍需重复验证。不要同时改 MTU、DNS、IPv6 和节点，否则无法判断是哪一项起效。</p>
+<p>对于由网络管理员维护的设备，应让管理员核查必要的 ICMP 反馈是否被错误过滤，而不是整体关闭防火墙。IPv6 使用 ICMPv6 Packet Too Big 反馈；上述 <code>/f</code> 只适用于 IPv4，不能把命令或结果原样套用到 IPv6。<a href="https://www.rfc-editor.org/rfc/rfc8201.html">RFC 8201</a></p>
+<h2 id="heading-3">常见问题</h2>
+<h3 id="mtu--1400--1280">MTU 设成 1400 或 1280，一定更稳定吗？</h3>
+<p>不能保证。合适数值取决于实际路径、协议封装和参数所在层；数值更小也可能增加传送相同数据所需的包数。先确认证据，再按当前客户端与网络的要求处理。</p>
+<h3 id="-tcp-mss--mtu-">改 TCP MSS 能解决所有 MTU 问题吗？</h3>
+<p>不能。MSS 约束的是 TCP 数据段，不能直接解决所有 UDP 传输问题。它与接口 MTU 不是同一个参数；应由了解隧道及流量方向的人选择处理方式，不宜照抄路由器脚本。<a href="https://developers.cloudflare.com/magic-transit/reference/mtu-mss/">Cloudflare MTU 与 MSS 说明</a></p>
+<h3 id="heading-4">反馈问题时需要哪些记录？</h3>
+<p>可填写下面的空白模板。它不是实测结果，分享前删去订阅链接、凭据和无关访问记录。</p>
+<pre><code class="language-text">时间与时区、系统和客户端版本：
+接入网络、节点、VPN/TUN/系统代理模式：
+失败的具体网页资源或传输任务：
+接口名称与原 MTU：
+探测目标、ICMP 路径是否确认：
+各探测大小与原始响应：
+本轮唯一改动、应用复测结果：
+恢复原值后的结果：
+</code></pre>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://www.xiaocang.blog/tags/windows-client/"># Windows客户端</a><a href="https://www.xiaocang.blog/tags/routing-tun/"># 分流与TUN</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-09-29-terminal-proxy-curl-git/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">一、为什么小请求成功，大传输却卡住？</a><a class="level-2" href="#heading-1">二、先确认测试的是同一条路径</a><a class="level-2" href="#windows">三、Windows：先记录接口，再比较探测包大小</a><a class="level-3" href="#1-">1. 查看当前接口信息</a><a class="level-3" href="#2--ipv4-">2. 对同一 IPv4 目标做少量探测</a><a class="level-3" href="#3-">3. 按结果决定是否继续</a><a class="level-2" href="#heading-2">四、有包大小限制的证据后，怎样处理？</a><a class="level-2" href="#heading-3">常见问题</a><a class="level-3" href="#mtu--1400--1280">MTU 设成 1400 或 1280，一定更稳定吗？</a><a class="level-3" href="#-tcp-mss--mtu-">改 TCP MSS 能解决所有 MTU 问题吗？</a><a class="level-3" href="#heading-4">反馈问题时需要哪些记录？</a></nav></aside>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/2dc85545-2e89-4472-ada1-6e37ab5afe96/","pageTitle":"VPN 能连接，但网页加载一半、大文件卡住？MTU 排查指南","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
