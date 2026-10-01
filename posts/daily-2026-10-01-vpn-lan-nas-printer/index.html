@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xiaocang-observatory">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查 · 小仓测评</title>
+<meta name="description" content="开启 VPN 或 TUN 后 NAS、打印机无法访问？按设备位置、服务端口、Windows 路由、网段冲突及 Bonjour 发现逐步排查，区分本地放行与 allow-lan，附只读诊断命令。">
+<meta name="keywords" content="VPN局域网,NAS无法访问,打印机搜索不到,TUN分流,网段冲突">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/">
+<meta property="og:title" content="开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查">
+<meta property="og:description" content="开启 VPN 或 TUN 后 NAS、打印机无法访问？按设备位置、服务端口、Windows 路由、网段冲突及 Bonjour 发现逐步排查，区分本地放行与 allow-lan，附只读诊断命令。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查">
+<meta name="twitter:description" content="开启 VPN 或 TUN 后 NAS、打印机无法访问？按设备位置、服务端口、Windows 路由、网段冲突及 Bonjour 发现逐步排查，区分本地放行与 allow-lan，附只读诊断命令。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-01T09:08:02&#43;08:00"><meta property="article:modified_time" content="2026-10-01T23:03:06&#43;08:00"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="Windows客户端"><meta property="article:tag" content="分流与TUN">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-01T23:03:06+08:00","datePublished":"2026-10-01T09:08:02+08:00","description":"开启 VPN 或 TUN 后 NAS、打印机无法访问？按设备位置、服务端口、Windows 路由、网段冲突及 Bonjour 发现逐步排查，区分本地放行与 allow-lan，附只读诊断命令。","headline":"开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/","name":"开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+
+</head>
+
+<body class="xc-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
+<h1 data-pagefind-meta="title">开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-10-01T09:08:02&#43;08:00">2026-10-01</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p><strong>开启 VPN 或 TUN 后，NAS、打印机突然无法访问，先确认目标是在身边的局域网，还是在 VPN 另一端。</strong> 本地设备通常应保留本地访问路径，远端设备则需要正确的隧道路由。接着分别检查设备地址、服务端口和自动发现，不要把“列表里搜不到”直接当成网络完全不通。</p>
+<p>作者：小仓 · 资料核对日期：2026-10-01</p>
+<p>本文以 Windows 上的 IPv4 诊断为例，适用于代理客户端启用后访问本地设备异常，以及通过 VPN 访问远端 NAS 的情况。不清楚接入方式时，可先看<a href="https://www.xiaocang.blog/posts/rule-global-tun-differences/">规则、全局与 TUN 的区别</a>。</p>
+<h2 id="heading">一、先确定设备到底在哪里</h2>
+<table>
+<thead>
+<tr>
+<th>使用场景</th>
+<th>预期访问路径</th>
+<th>常见检查方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>在家开启代理，访问家中 NAS 或打印机</td>
+<td>本地网卡或家中路由器</td>
+<td>本地访问策略、分流与防火墙</td>
+</tr>
+<tr>
+<td>在外连接家中的 VPN，访问家中 NAS</td>
+<td>通往家庭网络的隧道</td>
+<td>远端网段路由、回程与访问权限</td>
+</tr>
+<tr>
+<td>在外使用普通上网代理，想访问家中私有地址</td>
+<td>需要额外的家庭远程接入方案</td>
+<td>上网代理本身并未建立到家庭网络的路径</td>
+</tr>
+</tbody>
+</table>
+<p>先从路由器设备列表、打印机面板或 NAS 管理界面核对真实 IP，不要沿用几个月前的地址。还要确认电脑没有连到访客 Wi-Fi：相同路由器或相似网络名称，不足以证明设备间允许互访。</p>
+<p>在可信且允许测试的网络里，可保持设备和服务不变，比较 VPN 开启与关闭时的结果。若有断线保护或组织策略，先确认它是否按设计阻止本地访问；断开后仍不通，也可能是基础网络或设备服务的问题。</p>
+<h2 id="ip">二、IP、端口和设备名称要分开检查</h2>
+<h3 id="1-">1. 先测试实际服务端口</h3>
+<p>下面是 NAS 使用常规 SMB over TCP 时的示例。输入你自己的 NAS 地址，不要照抄他人的网段：</p>
+<pre><code class="language-powershell">$deviceAddress = Read-Host '输入你的 NAS 真实 IPv4 地址'
+Test-NetConnection -ComputerName $deviceAddress -Port 445 -InformationLevel Detailed
+</code></pre>
+<p>常规直连 TCP 的 SMB 使用 445 端口，依据<a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/direct-hosting-of-smb-over-tcpip">Microsoft SMB 文档</a>。打印机、NAS 网页管理或其他服务应改用设备实际启用的 TCP 端口；不要把 445 当作所有设备的通用测试。</p>
+<p>重点记录 <code>TcpTestSucceeded</code>、<code>InterfaceAlias</code> 和 <code>SourceAddress</code>。这条命令检测指定 TCP 连接，不能证明账号权限、共享目录或打印任务一定正常，也不能检测 UDP 发现机制。参数含义见<a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection?view=windowsserver2025-ps">Test-NetConnection 文档</a>。</p>
+<h3 id="2-">2. 根据结果分支排查</h3>
+<table>
+<thead>
+<tr>
+<th>观察结果</th>
+<th>下一步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPN 开关前后，同一 IP 的服务端口都失败</td>
+<td>先确认设备在线、地址、服务及网络隔离</td>
+</tr>
+<tr>
+<td>开启 VPN 后，原本成功的端口测试失败</td>
+<td>对照路由、客户端拦截策略与设备防火墙</td>
+</tr>
+<tr>
+<td>按 IP 可正常使用，设备名称却失败</td>
+<td>检查名称解析与应用使用的名称，不急着改路由</td>
+</tr>
+<tr>
+<td>手动指定设备可用，自动搜索列表为空</td>
+<td>检查发现协议及多播是否能到达</td>
+</tr>
+<tr>
+<td>TCP 成功，但共享访问被拒绝或打印失败</td>
+<td>转查服务配置、身份验证、权限或驱动</td>
+</tr>
+</tbody>
+</table>
+<p>IP 与名称访问也可能涉及不同的认证或证书条件。因此，“按 IP 成功”只是缩小范围的线索，不能据此要求永久绕过名称或证书检查。若问题集中在域名解析，可继续看<a href="https://www.xiaocang.blog/posts/dns-fake-ip-troubleshooting/">DNS 与 Fake-IP 排查</a>。</p>
+<h2 id="-windows-">三、查看 Windows 为目标选择了哪条路</h2>
+<p>在同一个 PowerShell 窗口执行：</p>
+<pre><code class="language-powershell">Find-NetRoute -RemoteIPAddress $deviceAddress
+</code></pre>
+<p>它查询到达目标时选择的本地 IP 和路由，通常返回两组对象。比较 VPN 开启前后的 <code>InterfaceAlias</code>、<code>DestinationPrefix</code> 和 <code>NextHop</code>，不要只看默认网关。<a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/find-netroute?view=windowsserver2025-ps">Microsoft Find-NetRoute 文档</a></p>
+<p>如果目标在当前家庭局域网，却选择了意外的 VPN 路径，就继续核对客户端的目标匹配规则；若目标本来在远端家庭网络，选择隧道反而可能是正确的。</p>
+<p>这个查询反映系统路由选择，不会模拟浏览器的独立 HTTP/SOCKS 代理，也不能证明后续没有防火墙拦截。TUN 已接管请求时，还应在客户端连接记录中核对目标与最终出站。</p>
+<h2 id="heading-1">四、检查本地、远端和隧道网段是否重叠</h2>
+<p>只读查看电脑当前 IPv4 地址及前缀长度：</p>
+<pre><code class="language-powershell">Get-NetIPAddress -AddressFamily IPv4 |
+    Select-Object InterfaceAlias, IPAddress, PrefixLength
+</code></pre>
+<p><code>PrefixLength</code> 表示网络前缀长度，应与地址一起记录；不能只看地址前三段就判断所有网段。<a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-netipaddress?view=windowsserver2025-ps">Microsoft Get-NetIPAddress 文档</a></p>
+<p>例如，外出网络和家中网络都使用 <code>192.168.50.0/24</code>，而家中 NAS 是 <code>192.168.50.20</code>，本机就可能把这个目标当作外出网络里的设备。这里的地址仅为示例。两端存在同一地址时，普通路由无法仅凭这个 IP 同时区分两台设备。</p>
+<p>由网络维护者规划不重叠的网段通常更容易管理。<a href="https://openvpn.net/as-docs/tutorials/tutorial--site-to-site-network.html">OpenVPN 的站点互联教程</a>也把不同网络使用不重叠网段列为前提。改网段前要盘点静态地址、DHCP 保留和打印机配置，不能只改路由器后就假定全部设备会自动恢复。</p>
+<p>对于远端访问，还需确认返回路径：请求能进入家庭网络，不代表 NAS 的回复能回到 VPN 客户端。路由模式下，相关网关可能需要知道 VPN 客户端网段的位置；具体取决于是否使用 NAT 等设计。<a href="https://openvpn.net/community-docs/setting-up-routing.html">OpenVPN 路由说明</a></p>
+<h2 id="heading-2">五、设备能用却搜索不到，可能是发现机制不同</h2>
+<p>自动发现与实际访问是两个环节。以 Bonjour 为例，它通过多播发布服务；多播通常不会自动跨越子网，所以 AirPrint 等场景不能仅靠“VPN 已连接”保证自动发现。<a href="https://support.apple.com/en-gb/guide/deployment/dep9151c4ace/1/web/1.0">Apple Bonjour 与 AirPlay 部署说明</a></p>
+<p>Windows 或厂商软件还可能使用其他发现协议，应查对应设备文档。若已确认目标服务可达，可按设备说明手动添加地址或名称；需要跨子网自动发现时，再由网络维护者评估发现服务转发。不要把多播代理当作解决所有打印故障的开关。</p>
+<h2 id="heading-3">常见问题</h2>
+<h3 id="heading-4">“允许局域网连接”开关一定能修好吗？</h3>
+<p>不一定，先看具体含义。Mihomo 的 <code>allow-lan</code> 允许其他设备通过本机代理端口访问互联网，它并不等同于允许本机访问 NAS。<a href="https://wiki.metacubex.one/config/general/">Mihomo 全局配置</a></p>
+<p>如果客户端另有本地网络放行或目标排除功能，应核对其文档和适用平台。只处理确有需要的设备或网段；全部私有地址都设为直连，可能同时影响原本应经过 VPN 的远端资源。</p>
+<h3 id="heading-5">应该先重置网络还是改分流？</h3>
+<p>先保留证据，再做单项修改。记录时间、客户端版本、设备位置、真实 IP、服务端口、VPN 开关前后的路由及测试结果。按客户端文档修改一项后，重新访问原服务并检查正常上网是否受影响；没有改善就恢复原设置。</p>
+<p>这样可以把问题交给对应的人处理：客户端规则、家庭网段规划、远端回程和打印服务权限，需要的修复并不相同。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://www.xiaocang.blog/tags/windows-client/"># Windows客户端</a><a href="https://www.xiaocang.blog/tags/routing-tun/"># 分流与TUN</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-09-30-vpn-mtu-troubleshooting/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">一、先确定设备到底在哪里</a><a class="level-2" href="#ip">二、IP、端口和设备名称要分开检查</a><a class="level-3" href="#1-">1. 先测试实际服务端口</a><a class="level-3" href="#2-">2. 根据结果分支排查</a><a class="level-2" href="#-windows-">三、查看 Windows 为目标选择了哪条路</a><a class="level-2" href="#heading-1">四、检查本地、远端和隧道网段是否重叠</a><a class="level-2" href="#heading-2">五、设备能用却搜索不到，可能是发现机制不同</a><a class="level-2" href="#heading-3">常见问题</a><a class="level-3" href="#heading-4">“允许局域网连接”开关一定能修好吗？</a><a class="level-3" href="#heading-5">应该先重置网络还是改分流？</a></nav></aside>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/02f12c05-f80c-4195-9bed-d548bf0bd9c6/","pageTitle":"开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
