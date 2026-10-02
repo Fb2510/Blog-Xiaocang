@@ -4,23 +4,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TLS证书 · 小仓测评</title>
-<meta name="description" content="区分握手、证书名称、有效期与信任链错误，按日志定位安全连接问题。">
-<meta name="keywords" content="TLS握手失败,证书错误,SNI">
-<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/tags/tls/">
-<meta property="og:title" content="TLS证书">
-<meta property="og:description" content="区分握手、证书名称、有效期与信任链错误，按日志定位安全连接问题。">
-<meta property="og:url" content="https://www.xiaocang.blog/tags/tls/">
+<title>网络排障 · 第 2 页 · 小仓测评</title>
+<meta name="description" content="排查VPN、代理、DNS和TUN连接故障，提供诊断步骤与结果解读。">
+<meta name="keywords" content="网络排障,VPN无法上网,DNS">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/tags/network-troubleshooting/page/2/">
+<meta property="og:title" content="网络排障 · 第 2 页">
+<meta property="og:description" content="排查VPN、代理、DNS和TUN连接故障，提供诊断步骤与结果解读。">
+<meta property="og:url" content="https://www.xiaocang.blog/tags/network-troubleshooting/page/2/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="小仓测评">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="TLS证书">
-<meta name="twitter:description" content="区分握手、证书名称、有效期与信任链错误，按日志定位安全连接问题。">
+<meta name="twitter:title" content="网络排障 · 第 2 页">
+<meta name="twitter:description" content="排查VPN、代理、DNS和TUN连接故障，提供诊断步骤与结果解读。">
 <meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
 
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/tags/tls/#collection","@type":"CollectionPage","description":"区分握手、证书名称、有效期与信任链错误，按日志定位安全连接问题。","inLanguage":"zh-CN","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","name":"TLS 握手失败与证书报错：时间、SNI 和信任链检查指南","position":1,"url":"https://www.xiaocang.blog/posts/tls-handshake-certificate-errors/"},{"@type":"ListItem","name":"Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比","position":2,"url":"https://www.xiaocang.blog/posts/shadowsocks-trojan-vless-comparison/"}]},"name":"TLS证书","url":"https://www.xiaocang.blog/tags/tls/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/tags/tls/","name":"TLS证书","position":2}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/tags/network-troubleshooting/page/2/#collection","@type":"CollectionPage","description":"排查VPN、代理、DNS和TUN连接故障，提供诊断步骤与结果解读。","inLanguage":"zh-CN","mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","name":"VPN 已连接却无法上网？Windows 11 的 8 步排查清单","position":1,"url":"https://www.xiaocang.blog/posts/vpn-connected-no-internet-windows-11/"}]},"name":"网络排障 · 第 2 页","url":"https://www.xiaocang.blog/tags/network-troubleshooting/page/2/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/tags/network-troubleshooting/","name":"网络排障","position":2},{"@type":"ListItem","item":"https://www.xiaocang.blog/tags/network-troubleshooting/page/2/","name":"第 2 页","position":3}]}]}</script>
 
 <script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
 <link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
@@ -66,35 +66,29 @@
 
 <main id="main" tabindex="-1" class="shell xc-inner-shell">
 
-<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">TLS证书</span></li></ol></nav>
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><a href="https://www.xiaocang.blog/tags/network-troubleshooting/">网络排障</a></li><li><span aria-current="page">第 2 页</span></li></ol></nav>
 
 
 
 <div class="content-column">
-<header class="archive-header"><span class="eyebrow">内容归档</span><h1>TLS证书</h1><p>区分握手、证书名称、有效期与信任链错误，按日志定位安全连接问题。</p></header>
+<header class="archive-header"><span class="eyebrow">内容归档</span><h1>网络排障 · 第 2 页</h1><p>排查VPN、代理、DNS和TUN连接故障，提供诊断步骤与结果解读。</p></header>
 
 
 
-<div class="xc-list-heading" id="latest"><h2>文章列表<span aria-hidden="true">.</span></h2><span>共 2 篇本页内容</span></div>
+<div class="xc-list-heading" id="latest"><h2>文章列表<span aria-hidden="true">.</span></h2><span>共 1 篇本页内容</span></div>
 
 <section class="article-list" aria-label="文章列表">
 <article class="article-card">
 
 <div class="xc-card-content"><div class="xc-card-label"><span>小仓 · 阅读</span><span class="xc-card-arrow" aria-hidden="true">↗</span></div>
-<h2><a href="https://www.xiaocang.blog/posts/tls-handshake-certificate-errors/">TLS 握手失败与证书报错：时间、SNI 和信任链检查指南</a></h2><p class="card-summary">区分证书过期、名称不匹配、未知签发者和握手超时，说明本地时间、服务端参数与客户端兼容性的检查顺序。</p>
-<div class="card-footer"><span><span class="xc-author-dot" aria-hidden="true"></span><span>小仓</span><time datetime="2026-09-29T00:18:23&#43;08:00">2026-09-29</time><a class="card-category" href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a></span><a class="read-more" href="https://www.xiaocang.blog/posts/tls-handshake-certificate-errors/" aria-label="阅读TLS 握手失败与证书报错：时间、SNI 和信任链检查指南">阅读全文 <span aria-hidden="true">→</span></a></div>
-</div></article>
-<article class="article-card">
-
-<div class="xc-card-content"><div class="xc-card-label"><span>小仓 · 阅读</span><span class="xc-card-arrow" aria-hidden="true">↗</span></div>
-<h2><a href="https://www.xiaocang.blog/posts/shadowsocks-trojan-vless-comparison/">Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比</a></h2><p class="card-summary">区分 Shadowsocks、Trojan 与 VLESS 的协议定位、传输安全和客户端兼容条件，说明为什么不能单凭协议名称判断机场速度或安全性。</p>
-<div class="card-footer"><span><span class="xc-author-dot" aria-hidden="true"></span><span>小仓</span><time datetime="2026-09-29T00:18:09&#43;08:00">2026-09-29</time><a class="card-category" href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></span><a class="read-more" href="https://www.xiaocang.blog/posts/shadowsocks-trojan-vless-comparison/" aria-label="阅读Shadowsocks、Trojan 与 VLESS 怎么选？加密层与兼容性对比">阅读全文 <span aria-hidden="true">→</span></a></div>
+<h2><a href="https://www.xiaocang.blog/posts/vpn-connected-no-internet-windows-11/">VPN 已连接却无法上网？Windows 11 的 8 步排查清单</a></h2><p class="card-summary">按基础网络、服务状态、系统代理、应用接入、DNS 和 TUN 路由逐步定位故障，附 Windows PowerShell 诊断命令、结果解读和可复现问题记录模板。</p>
+<div class="card-footer"><span><span class="xc-author-dot" aria-hidden="true"></span><span>小仓</span><time datetime="2026-09-27T23:21:59&#43;08:00">2026-09-27</time><a class="card-category" href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></span><a class="read-more" href="https://www.xiaocang.blog/posts/vpn-connected-no-internet-windows-11/" aria-label="阅读VPN 已连接却无法上网？Windows 11 的 8 步排查清单">阅读全文 <span aria-hidden="true">→</span></a></div>
 </div></article>
 
 </section>
 
 
-
+<nav class="pagination" aria-label="分页"><a href="https://www.xiaocang.blog/tags/network-troubleshooting/">← 上一页</a><span>2 / 2</span><span></span></nav>
 
 
 </div>
