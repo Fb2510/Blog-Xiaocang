@@ -19,8 +19,8 @@
 <meta name="twitter:title" content="WebRTC IP 泄漏怎么查？VPN 与代理环境下的地址判断和排查">
 <meta name="twitter:description" content="WebRTC 检测出现不同 IP，不一定是公网出口泄漏。区分 ICE 候选、私有地址和 TURN 中继，在 VPN/代理环境中对照 HTTP 出口与直连基线，排查 UDP、IPv6 和浏览器地址策略。">
 <meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
-<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-02T14:15:20&#43;08:00"><meta property="article:modified_time" content="2026-10-02T14:16:57&#43;08:00"><meta property="article:tag" content="VPN基础"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="分流与TUN">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-02-webrtc-ip-leak-check/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-02T14:16:57+08:00","datePublished":"2026-10-02T14:15:20+08:00","description":"WebRTC 检测出现不同 IP，不一定是公网出口泄漏。区分 ICE 候选、私有地址和 TURN 中继，在 VPN/代理环境中对照 HTTP 出口与直连基线，排查 UDP、IPv6 和浏览器地址策略。","headline":"WebRTC IP 泄漏怎么查？VPN 与代理环境下的地址判断和排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-02-webrtc-ip-leak-check/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-02-webrtc-ip-leak-check/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-02-webrtc-ip-leak-check/","name":"WebRTC IP 泄漏怎么查？VPN 与代理环境下的地址判断和排查","position":2}]}]}</script>
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-02T14:15:20&#43;08:00"><meta property="article:modified_time" content="2026-10-03T03:37:51&#43;08:00"><meta property="article:tag" content="网络基础"><meta property="article:tag" content="网络排障">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-02-webrtc-ip-leak-check/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-03T03:37:51+08:00","datePublished":"2026-10-02T14:15:20+08:00","description":"WebRTC 检测出现不同 IP，不一定是公网出口泄漏。区分 ICE 候选、私有地址和 TURN 中继，在 VPN/代理环境中对照 HTTP 出口与直连基线，排查 UDP、IPv6 和浏览器地址策略。","headline":"WebRTC IP 泄漏怎么查？VPN 与代理环境下的地址判断和排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-02-webrtc-ip-leak-check/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-02-webrtc-ip-leak-check/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-02-webrtc-ip-leak-check/","name":"WebRTC IP 泄漏怎么查？VPN 与代理环境下的地址判断和排查","position":2}]}]}</script>
 
 <script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
 <link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
@@ -185,8 +185,8 @@ ICE服务、权限状态与候选类型：
 <span id="page-like-label">点赞</span><span id="page-like-count">—</span>
 </button><p id="page-like-message" role="status"></p>
 </div>
-<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/vpn-basics/"># VPN基础</a><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://www.xiaocang.blog/tags/routing-tun/"># 分流与TUN</a></div>
-<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/">下一篇 →</a></nav>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/vpn-basics/"># 网络基础</a><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/daily-2026-10-03-clash-delay-timeout/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/">下一篇 →</a></nav>
 <section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
 </article>
 
@@ -202,7 +202,7 @@ ICE服务、权限状态与候选类型：
 </div>
 
 <footer class="site-footer">
-<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a></nav>
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a></nav>
 <div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
 </footer>
 

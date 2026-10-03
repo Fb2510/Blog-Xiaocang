@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xiaocang-observatory">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clash 节点测速超时却能上网？测速地址与健康检查排查 · 小仓测评</title>
+<meta name="description" content="Clash 节点测速超时却能上网怎么办？核对实际节点、测速 URL、期望状态码与超时设置，区分代理组和代理集合健康检查，并用 Windows 命令做对照排查。">
+<meta name="keywords" content="Clash测速超时,节点延迟超时,代理健康检查,测速URL">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-10-03-clash-delay-timeout/">
+<meta property="og:title" content="Clash 节点测速超时却能上网？测速地址与健康检查排查">
+<meta property="og:description" content="Clash 节点测速超时却能上网怎么办？核对实际节点、测速 URL、期望状态码与超时设置，区分代理组和代理集合健康检查，并用 Windows 命令做对照排查。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-10-03-clash-delay-timeout/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Clash 节点测速超时却能上网？测速地址与健康检查排查">
+<meta name="twitter:description" content="Clash 节点测速超时却能上网怎么办？核对实际节点、测速 URL、期望状态码与超时设置，区分代理组和代理集合健康检查，并用 Windows 命令做对照排查。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-03T09:07:44&#43;08:00"><meta property="article:modified_time" content="2026-10-04T00:17:26&#43;08:00"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="客户端教程">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-03-clash-delay-timeout/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-04T00:17:26+08:00","datePublished":"2026-10-03T09:07:44+08:00","description":"Clash 节点测速超时却能上网怎么办？核对实际节点、测速 URL、期望状态码与超时设置，区分代理组和代理集合健康检查，并用 Windows 命令做对照排查。","headline":"Clash 节点测速超时却能上网？测速地址与健康检查排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-03-clash-delay-timeout/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-03-clash-delay-timeout/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-03-clash-delay-timeout/","name":"Clash 节点测速超时却能上网？测速地址与健康检查排查","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+
+</head>
+
+<body class="xc-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">Clash 节点测速超时却能上网？测速地址与健康检查排查</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
+<h1 data-pagefind-meta="title">Clash 节点测速超时却能上网？测速地址与健康检查排查</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-10-03T09:07:44&#43;08:00">2026-10-03</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>**Clash 节点测速显示超时，并不一定意味着节点完全不可用。**先确认网页和测速使用的是同一个节点，再核对测速 URL、超时阈值与健康检查配置。网页能打开，也只能证明这次访问成功，不能据此认定所有网站都能正常访问。</p>
+<p>本文适用于使用 mihomo 内核的客户端；不同客户端的按钮名称和测速实现可能不同。资料核对日期：2026 年 10 月 3 日。</p>
+<h2 id="ping-">测速、ping 和下载速度各说明什么？</h2>
+<p>Windows 的 <code>ping</code> 发送 ICMP 回显请求，用来观察对应 IP 路径的响应；客户端的 URL 测试则面向指定地址。两者的目标、协议和经过的路径可能不同，不能用一次 ping 结果替代代理访问验证。<a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ping">Microsoft ping 文档</a></p>
+<p>mihomo 的 <code>url-test</code> 配置包含测试 URL；<code>unified-delay</code> 又会影响延迟计算方式。因此，比较两个节点前，应保持测速设置一致。短请求的延迟也不是长时间下载的吞吐量，视频卡顿应另看<a href="https://www.xiaocang.blog/posts/daily-2026-09-28-fast-speed-test-video-buffering/">延迟、抖动与丢包排查</a>。<a href="https://wiki.metacubex.one/config/proxy-groups/url-test/">自动选择配置</a>、<a href="https://wiki.metacubex.one/config/general/">统一延迟说明</a></p>
+<h2 id="heading">按顺序检查，避免同时改多个变量</h2>
+<h3 id="heading-1">第一步：确认“能上网”的确是被测节点</h3>
+<p>先暂停下载，把相关手动选择组固定到待查节点，再重新打开目标网页。在客户端连接页核对实际代理链：网页可能走直连、另一个策略组，或者自动组已经切换了节点。只看到网页加载成功，还不足以验证被测节点。</p>
+<p>mihomo 的连接信息包含代理链和匹配规则，可用来核对实际路径。如果不清楚规则如何选择出口，先看<a href="https://www.xiaocang.blog/posts/rule-global-tun-differences/">规则、全局与 TUN 的区别</a>。<a href="https://wiki.metacubex.one/api/">连接信息文档</a></p>
+<h3 id="heading-2">第二步：记录生效的测速条件</h3>
+<p>找到当前测试使用的 URL、超时值、期望状态码，以及最近一次测试时间。手动测试按钮与后台定时检查可能使用不同参数，核对时要区分是哪一种结果。</p>
+<p>在 mihomo 代理组配置中，<code>url</code> 指定健康检查地址，<code>timeout</code> 以毫秒计；设置 <code>expected-status</code> 后，响应码必须满足该条件才被认为可用。例如，期望 204 的检查收到 200，即使连接已建立，也可能不符合检查标准。<code>interval</code> 则以秒计，别把两个时间单位弄反。<a href="https://wiki.metacubex.one/config/proxy-groups/">代理组通用字段</a></p>
+<h3 id="heading-3">第三步：通过本地代理复查同一个地址</h3>
+<p>以下是 <strong>Windows PowerShell</strong> 对照命令。先确认客户端已开启 HTTP 或 mixed 监听，把示例端口 <code>7890</code> 换成实际端口；如果当前测试 URL 不同，也替换 <code>$probeUrl</code>。</p>
+<pre><code class="language-powershell">$probeUrl = 'https://www.gstatic.com/generate_204'
+curl.exe -q --silent --show-error --noproxy &quot;localhost,127.0.0.1&quot; --proxy &quot;http://127.0.0.1:7890&quot; --connect-timeout 8 --max-time 15 --output NUL --write-out &quot;HTTP=%{http_code} Total=%{time_total}s\n&quot; $probeUrl
+$LASTEXITCODE
+</code></pre>
+<p><code>--proxy</code> 指定本地代理；这里的 <code>--noproxy</code> 列表只排除本地主机，避免已有 <code>NO_PROXY</code> 把这个外部测试域名绕过。<code>NUL</code> 丢弃响应正文，<code>Total</code> 是整个请求的耗时，单位为秒。8 秒和 15 秒只是演示限制，并非节点合格标准。<a href="https://curl.se/docs/manpage.html">curl 选项说明</a></p>
+<p>读取结果时同时看 HTTP 状态、错误文字和退出码。没有加入 <code>--fail</code> 时，退出码为 0 也不能保证 HTTP 状态符合预期。curl 对照请求与客户端探测的连接复用、请求细节及计时方式可能不同，因此耗时不必完全相等；还要在连接页确认它最终经过了待查节点。</p>
+<h3 id="heading-4">第四步：换目标做对照，再判断故障范围</h3>
+<p>保持同一节点和网络，用原测试 URL 与一个自己确认可访问的 HTTPS 页面分别测试，间隔几秒各重复三次。第二个页面的正常状态码可能是 200，不能机械套用原地址的 204 条件。下表是排查方向，不是对某个机场的实测结论。</p>
+<table>
+<thead>
+<tr>
+<th>观察结果</th>
+<th>下一步检查</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原测试地址失败，另一地址成功</td>
+<td>测试域名的解析、访问路径和状态码条件</td>
+</tr>
+<tr>
+<td>两个地址都失败，网页却成功</td>
+<td>网页是否缓存或走了其他出口，以及本地代理端口</td>
+</tr>
+<tr>
+<td>curl 可完成，客户端一直报超时</td>
+<td>两边的 URL、超时设置、实际节点和错误日志</td>
+</tr>
+<tr>
+<td>同一条件下结果时好时坏</td>
+<td>记录失败时段、错误类型，再比较网络与节点</td>
+</tr>
+</tbody>
+</table>
+<p>如果只在某些域名上失败，可继续按<a href="https://www.xiaocang.blog/posts/dns-fake-ip-troubleshooting/">DNS 与 Fake-IP 排查</a>检查；不要一次改 DNS、节点、测速地址和超时值，否则难以判断哪个变量起了作用。</p>
+<h3 id="heading-5">第五步：区分代理组与代理集合的健康检查</h3>
+<p>节点通过 <code>proxy-providers</code> 引入时，还要核对对应集合的 <code>health-check</code>。官方文档明确说明，代理组的 <code>url</code> 健康检查针对 <code>proxies</code> 字段中的代理，不负责检查经 <code>use</code> 引入的集合代理。因此，只改组内地址，不一定改到了集合的检查地址。<a href="https://wiki.metacubex.one/config/proxy-groups/#url">代理组检查范围</a></p>
+<p>集合具有自己的启用开关、测试 URL、间隔、超时与 <code>lazy</code> 设置；启用懒惰检查时，未使用的集合节点可能不执行后台测试。先区分“本次测试失败”和“没有新的测试结果”，再决定是否调整。修改前备份配置，订阅更新后重新核对生效值。<a href="https://wiki.metacubex.one/config/proxy-providers/#health-check">代理集合健康检查</a></p>
+<h2 id="heading-6">两个常见问题</h2>
+<h3 id="heading-7">把超时调大，就算修好了吗？</h3>
+<p>更长的等待时间有助于确认请求能否最终完成，却不能证明链路稳定。比较修改前后的完成率和实际网页体验；若错误属于状态码不符或证书问题，单纯增加等待时间未必有效。</p>
+<h3 id="-http">能否改成 HTTP，或者关闭证书校验？</h3>
+<p>换协议会改变测试条件，不能把结果直接当成原 HTTPS 问题已解决。遇到证书报错，先记录错误并检查时间和信任链；不要靠关闭校验掩盖问题。</p>
+<h2 id="heading-8">留一份可复查的测试记录</h2>
+<table>
+<thead>
+<tr>
+<th>时间／本地网络</th>
+<th>实际节点</th>
+<th>URL／超时／期望状态</th>
+<th>HTTP／退出码／耗时</th>
+<th>网页结果与错误摘要</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>待填写</td>
+<td>待填写</td>
+<td>待填写</td>
+<td>待填写</td>
+<td>待填写</td>
+</tr>
+</tbody>
+</table>
+<p>同时记录客户端和内核版本、测试入口及是否开启统一延迟。分享给服务商时，删除订阅链接和节点密码。有效反馈应说明具体条件下发生了什么，而不是仅凭一个超时图标判断整条线路的质量。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://www.xiaocang.blog/tags/client-setup/"># 客户端教程</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-10-02-webrtc-ip-leak-check/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#ping-">测速、ping 和下载速度各说明什么？</a><a class="level-2" href="#heading">按顺序检查，避免同时改多个变量</a><a class="level-3" href="#heading-1">第一步：确认“能上网”的确是被测节点</a><a class="level-3" href="#heading-2">第二步：记录生效的测速条件</a><a class="level-3" href="#heading-3">第三步：通过本地代理复查同一个地址</a><a class="level-3" href="#heading-4">第四步：换目标做对照，再判断故障范围</a><a class="level-3" href="#heading-5">第五步：区分代理组与代理集合的健康检查</a><a class="level-2" href="#heading-6">两个常见问题</a><a class="level-3" href="#heading-7">把超时调大，就算修好了吗？</a><a class="level-3" href="#-http">能否改成 HTTP，或者关闭证书校验？</a><a class="level-2" href="#heading-8">留一份可复查的测试记录</a></nav></aside>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a></nav>
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/0875d4b0-1e13-4aa2-ada9-d00cb6f65d53/","pageTitle":"Clash 节点测速超时却能上网？测速地址与健康检查排查","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>

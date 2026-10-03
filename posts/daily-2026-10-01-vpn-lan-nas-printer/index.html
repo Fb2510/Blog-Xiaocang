@@ -19,8 +19,8 @@
 <meta name="twitter:title" content="开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查">
 <meta name="twitter:description" content="开启 VPN 或 TUN 后 NAS、打印机无法访问？按设备位置、服务端口、Windows 路由、网段冲突及 Bonjour 发现逐步排查，区分本地放行与 allow-lan，附只读诊断命令。">
 <meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
-<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-01T09:08:02&#43;08:00"><meta property="article:modified_time" content="2026-10-01T23:03:06&#43;08:00"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="Windows客户端"><meta property="article:tag" content="分流与TUN">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-01T23:03:06+08:00","datePublished":"2026-10-01T09:08:02+08:00","description":"开启 VPN 或 TUN 后 NAS、打印机无法访问？按设备位置、服务端口、Windows 路由、网段冲突及 Bonjour 发现逐步排查，区分本地放行与 allow-lan，附只读诊断命令。","headline":"开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/","name":"开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查","position":2}]}]}</script>
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-01T09:08:02&#43;08:00"><meta property="article:modified_time" content="2026-10-03T03:37:55&#43;08:00"><meta property="article:tag" content="网络基础"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="客户端教程">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-03T03:37:55+08:00","datePublished":"2026-10-01T09:08:02+08:00","description":"开启 VPN 或 TUN 后 NAS、打印机无法访问？按设备位置、服务端口、Windows 路由、网段冲突及 Bonjour 发现逐步排查，区分本地放行与 allow-lan，附只读诊断命令。","headline":"开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-01-vpn-lan-nas-printer/","name":"开启 VPN 后 NAS 和打印机连不上？局域网分流与网段冲突排查","position":2}]}]}</script>
 
 <script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
 <link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
@@ -182,7 +182,7 @@ Test-NetConnection -ComputerName $deviceAddress -Port 445 -InformationLevel Deta
 <span id="page-like-label">点赞</span><span id="page-like-count">—</span>
 </button><p id="page-like-message" role="status"></p>
 </div>
-<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://www.xiaocang.blog/tags/windows-client/"># Windows客户端</a><a href="https://www.xiaocang.blog/tags/routing-tun/"># 分流与TUN</a></div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/vpn-basics/"># 网络基础</a><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://www.xiaocang.blog/tags/client-setup/"># 客户端教程</a></div>
 <nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/daily-2026-10-02-webrtc-ip-leak-check/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-09-30-vpn-mtu-troubleshooting/">下一篇 →</a></nav>
 <section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
 </article>
@@ -199,7 +199,7 @@ Test-NetConnection -ComputerName $deviceAddress -Port 445 -InformationLevel Deta
 </div>
 
 <footer class="site-footer">
-<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a></nav>
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a></nav>
 <div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
 </footer>
 
