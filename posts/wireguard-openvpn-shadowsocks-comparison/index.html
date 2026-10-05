@@ -7,36 +7,36 @@
 <title>WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法 · 小仓测评</title>
 <meta name="description" content="WireGuard、OpenVPN 与 Shadowsocks 有哪些区别？比较 VPN 隧道、加密代理及 UDP/TCP 的使用条件，给出按场景选择与公平测试的方法，不用虚构测速排名判断协议。">
 <meta name="keywords" content="WireGuard和OpenVPN区别,Shadowsocks与VPN,VPN协议对比,UDP和TCP,代理协议选择">
-<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/">
 <meta property="og:title" content="WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法">
 <meta property="og:description" content="WireGuard、OpenVPN 与 Shadowsocks 有哪些区别？比较 VPN 隧道、加密代理及 UDP/TCP 的使用条件，给出按场景选择与公平测试的方法，不用虚构测速排名判断协议。">
-<meta property="og:url" content="https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/">
+<meta property="og:url" content="https://xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="小仓测评">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta property="og:image" content="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法">
 <meta name="twitter:description" content="WireGuard、OpenVPN 与 Shadowsocks 有哪些区别？比较 VPN 隧道、加密代理及 UDP/TCP 的使用条件，给出按场景选择与公平测试的方法，不用虚构测速排名判断协议。">
-<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="twitter:image" content="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
 <meta name="author" content="小仓"><meta property="article:published_time" content="2026-09-27T23:22:02&#43;08:00"><meta property="article:modified_time" content="2026-10-03T03:39:10&#43;08:00"><meta property="article:tag" content="网络基础">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-03T03:39:10+08:00","datePublished":"2026-09-27T23:22:02+08:00","description":"WireGuard、OpenVPN 与 Shadowsocks 有哪些区别？比较 VPN 隧道、加密代理及 UDP/TCP 的使用条件，给出按场景选择与公平测试的方法，不用虚构测速排名判断协议。","headline":"WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/","name":"WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法","position":2}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-03T03:39:10+08:00","datePublished":"2026-09-27T23:22:02+08:00","description":"WireGuard、OpenVPN 与 Shadowsocks 有哪些区别？比较 VPN 隧道、加密代理及 UDP/TCP 的使用条件，给出按场景选择与公平测试的方法，不用虚构测速排名判断协议。","headline":"WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/","@type":"WebPage"},"url":"https://xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://xiaocang.blog/posts/wireguard-openvpn-shadowsocks-comparison/","name":"WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法","position":2}]}]}</script>
 
 <script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
-<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
-<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
-<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
-<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
-<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/search.css"><script defer src="https://xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/artalk.css"><script defer src="https://xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://xiaocang.blog/assets/theme/image-viewer.js"></script>
 
-<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+<script defer src="https://xiaocang.blog/assets/theme/interactions.js"></script>
 
 <meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
 
@@ -47,9 +47,9 @@
 
 <header class="site-header">
 <div class="header-inner">
-<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
-<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
-<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<a class="brand" href="https://xiaocang.blog/"><img src="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://xiaocang.blog/">首页</a><a href="https://xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
 <button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
 <svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
 <svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
@@ -66,7 +66,7 @@
 <div class="article-viewport"><div class="article-scroll">
 <main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
 
-<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法</span></li></ol></nav>
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法</span></li></ol></nav>
 
 
 
@@ -75,7 +75,7 @@
 <div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
 <h1 data-pagefind-meta="title">WireGuard、OpenVPN 和 Shadowsocks 怎么选？协议区别与测试方法</h1>
 <div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-09-27T23:22:02&#43;08:00">2026-09-27</time><span><span id="page-views">—</span> 次阅读</span></div>
-<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+<div class="chips" data-pagefind-ignore><a href="https://xiaocang.blog/categories/network-guides/">网络教程</a></div>
 </header>
 <div class="prose"><p>资料核对：2026 年 9 月 27 日。本文依据官方文档比较协议定位，并提供可复用的测试方法；不提供虚构的速度排名，也不代表对具体商业服务的评测。</p>
 <p><strong>WireGuard、OpenVPN 和 Shadowsocks 怎么选？</strong> 先看你的客户端与服务端共同支持什么，再看实际应用和网络条件。WireGuard、OpenVPN 常用于构建 VPN 隧道，Shadowsocks 属于加密代理体系；协议名称本身不能保证翻墙成功率、节点速度或流媒体可用性。</p>
@@ -234,14 +234,14 @@
 <span id="page-like-label">点赞</span><span id="page-like-count">—</span>
 </button><p id="page-like-message" role="status"></p>
 </div>
-<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/vpn-basics/"># 网络基础</a></div>
-<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/daily-2026-09-28-fast-speed-test-video-buffering/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/vpn-connected-no-internet-windows-11/">下一篇 →</a></nav>
+<div class="article-tags" data-pagefind-ignore><a href="https://xiaocang.blog/tags/vpn-basics/"># 网络基础</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://xiaocang.blog/posts/daily-2026-09-28-fast-speed-test-video-buffering/">← 上一篇</a><a href="https://xiaocang.blog/posts/vpn-connected-no-internet-windows-11/">下一篇 →</a></nav>
 <section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
 </article>
 
 <div class="article-rail">
 <aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">三种协议的主要区别</a><a class="level-2" href="#wireguard-udp-">WireGuard：先确认 UDP 路径和隧道路由</a><a class="level-2" href="#openvpnudp--tcp-">OpenVPN：UDP 与 TCP 要结合网络条件</a><a class="level-2" href="#shadowsocks">Shadowsocks：关注代理接入和具体实现</a><a class="level-2" href="#heading-1">按使用场景决定测试重点</a><a class="level-2" href="#heading-2">一份可以自己复用的公平测试方案</a><a class="level-3" href="#1-">1. 固定尽可能多的条件</a><a class="level-3" href="#2-">2. 交替测试，保留普通结果</a><a class="level-3" href="#3-">3. 把记录留成一张表</a><a class="level-3" href="#4-">4. 用实际需求作出选择</a><a class="level-2" href="#heading-3">常见问题</a><a class="level-3" href="#wireguard--openvpn-">WireGuard 一定比 OpenVPN 快吗？</a><a class="level-3" href="#openvpn--tcp-443">OpenVPN 使用 TCP 443，就一定能连接吗？</a><a class="level-3" href="#heading-4">换协议能解决所有“已连接但打不开网页”吗？</a><a class="level-3" href="#heading-5">哪种协议能保证解锁所有流媒体？</a></nav></aside>
-<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+<a class="xc-return" href="https://xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
 
 </main>
 </div>
@@ -252,7 +252,7 @@
 
 <footer class="site-footer">
 <nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a><a href="https://t.me/@oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我 <span aria-hidden="true">↗</span></a></nav>
-<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+<div class="xc-footer-line"><a href="https://xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
 </footer>
 
 
@@ -261,9 +261,9 @@
 <header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
 <div class="reader-dialog-body">
 
-<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+<div id="site-search-ui" data-module="https://xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
 
-<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-config bundle-path="https://xiaocang.blog/pagefind/" base-url="https://xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
 <pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
 <pagefind-summary></pagefind-summary>
 <pagefind-results></pagefind-results>

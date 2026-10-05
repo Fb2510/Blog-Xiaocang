@@ -7,36 +7,36 @@
 <title>机场评测怎么做才可信？测试环境、原始记录与结论边界 · 小仓测评</title>
 <meta name="description" content="怎样判断机场评测是否可信？了解测试环境、实际任务、失败样本与结论边界，获取可填写的记录表，用可复核证据评估机场推荐。">
 <meta name="keywords" content="机场评测方法,机场推荐依据,节点测试记录,机场稳定性测试">
-<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/airport-review-testing-method/">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://xiaocang.blog/posts/airport-review-testing-method/">
 <meta property="og:title" content="机场评测怎么做才可信？测试环境、原始记录与结论边界">
 <meta property="og:description" content="怎样判断机场评测是否可信？了解测试环境、实际任务、失败样本与结论边界，获取可填写的记录表，用可复核证据评估机场推荐。">
-<meta property="og:url" content="https://www.xiaocang.blog/posts/airport-review-testing-method/">
+<meta property="og:url" content="https://xiaocang.blog/posts/airport-review-testing-method/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="小仓测评">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta property="og:image" content="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机场评测怎么做才可信？测试环境、原始记录与结论边界">
 <meta name="twitter:description" content="怎样判断机场评测是否可信？了解测试环境、实际任务、失败样本与结论边界，获取可填写的记录表，用可复核证据评估机场推荐。">
-<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="twitter:image" content="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
 <meta name="author" content="小仓"><meta property="article:published_time" content="2026-09-29T00:17:43&#43;08:00"><meta property="article:modified_time" content="2026-10-03T03:38:56&#43;08:00"><meta property="article:tag" content="机场推荐"><meta property="article:tag" content="网络基础">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/airport-review-testing-method/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-03T03:38:56+08:00","datePublished":"2026-09-29T00:17:43+08:00","description":"怎样判断机场评测是否可信？了解测试环境、实际任务、失败样本与结论边界，获取可填写的记录表，用可复核证据评估机场推荐。","headline":"机场评测怎么做才可信？测试环境、原始记录与结论边界","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/airport-review-testing-method/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/airport-review-testing-method/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/airport-review-testing-method/","name":"机场评测怎么做才可信？测试环境、原始记录与结论边界","position":2}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://xiaocang.blog/posts/airport-review-testing-method/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-03T03:38:56+08:00","datePublished":"2026-09-29T00:17:43+08:00","description":"怎样判断机场评测是否可信？了解测试环境、实际任务、失败样本与结论边界，获取可填写的记录表，用可复核证据评估机场推荐。","headline":"机场评测怎么做才可信？测试环境、原始记录与结论边界","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://xiaocang.blog/posts/airport-review-testing-method/","@type":"WebPage"},"url":"https://xiaocang.blog/posts/airport-review-testing-method/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://xiaocang.blog/posts/airport-review-testing-method/","name":"机场评测怎么做才可信？测试环境、原始记录与结论边界","position":2}]}]}</script>
 
 <script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
-<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
-<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
-<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
-<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
-<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/search.css"><script defer src="https://xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/artalk.css"><script defer src="https://xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://xiaocang.blog/assets/theme/image-viewer.js"></script>
 
-<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+<script defer src="https://xiaocang.blog/assets/theme/interactions.js"></script>
 
 <meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
 
@@ -47,9 +47,9 @@
 
 <header class="site-header">
 <div class="header-inner">
-<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
-<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
-<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<a class="brand" href="https://xiaocang.blog/"><img src="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://xiaocang.blog/">首页</a><a href="https://xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
 <button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
 <svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
 <svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
@@ -66,7 +66,7 @@
 <div class="article-viewport"><div class="article-scroll">
 <main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
 
-<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">机场评测怎么做才可信？测试环境、原始记录与结论边界</span></li></ol></nav>
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">机场评测怎么做才可信？测试环境、原始记录与结论边界</span></li></ol></nav>
 
 
 
@@ -75,7 +75,7 @@
 <div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
 <h1 data-pagefind-meta="title">机场评测怎么做才可信？测试环境、原始记录与结论边界</h1>
 <div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-09-29T00:17:43&#43;08:00">2026-09-29</time><span><span id="page-views">—</span> 次阅读</span></div>
-<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a></div>
+<div class="chips" data-pagefind-ignore><a href="https://xiaocang.blog/categories/airport-review/">机场推荐</a></div>
 </header>
 <div class="prose"><p>一份可信的机场评测应让读者知道：测试发生在什么时候、使用什么网络、完成了什么任务，以及结论适用于哪些条件。只有一张高峰值测速图，很难回答服务是否适合你的问题。</p>
 <p>本文给出一套可复制的记录办法，没有使用虚构测速数据，也不将服务商宣传当作测量结果。选购前可先填写<a href="/posts/airport-selection-checklist/">机场需求清单</a>，明确哪些指标值得测试。</p>
@@ -128,14 +128,14 @@
 <span id="page-like-label">点赞</span><span id="page-like-count">—</span>
 </button><p id="page-like-message" role="status"></p>
 </div>
-<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/"># 机场推荐</a><a href="https://www.xiaocang.blog/tags/vpn-basics/"># 网络基础</a></div>
-<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/clash-verge-rev-windows-guide/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/direct-relay-iepl-iplc-routes/">下一篇 →</a></nav>
+<div class="article-tags" data-pagefind-ignore><a href="https://xiaocang.blog/tags/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/"># 机场推荐</a><a href="https://xiaocang.blog/tags/vpn-basics/"># 网络基础</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://xiaocang.blog/posts/clash-verge-rev-windows-guide/">← 上一篇</a><a href="https://xiaocang.blog/posts/direct-relay-iepl-iplc-routes/">下一篇 →</a></nav>
 <section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
 </article>
 
 <div class="article-rail">
 <aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">把三类信息分开写</a><a class="level-2" href="#-7-">测试前固定 7 个条件</a><a class="level-2" href="#heading-1">从任务成功开始，再看速率</a><a class="level-2" href="#heading-2">直接复制这张记录表</a><a class="level-2" href="#heading-3">怎样汇总才不容易误导</a><a class="level-2" href="#heading-4">推荐结论应该包含限制</a></nav></aside>
-<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+<a class="xc-return" href="https://xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
 
 </main>
 </div>
@@ -146,7 +146,7 @@
 
 <footer class="site-footer">
 <nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a><a href="https://t.me/@oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我 <span aria-hidden="true">↗</span></a></nav>
-<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+<div class="xc-footer-line"><a href="https://xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
 </footer>
 
 
@@ -155,9 +155,9 @@
 <header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
 <div class="reader-dialog-body">
 
-<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+<div id="site-search-ui" data-module="https://xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
 
-<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-config bundle-path="https://xiaocang.blog/pagefind/" base-url="https://xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
 <pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
 <pagefind-summary></pagefind-summary>
 <pagefind-results></pagefind-results>
