@@ -7,36 +7,36 @@
 <title>Docker 容器连不上本机代理？host.docker.internal 与配置排查 · 小仓测评</title>
 <meta name="description" content="Docker 容器连不上本机代理怎么办？以 Windows Docker Desktop 为例，解释 host.docker.internal、拉镜像与容器代理配置的区别，提供单次测试和错误对照。">
 <meta name="keywords" content="Docker容器代理,host.docker.internal,Docker Desktop代理,容器无法联网">
-<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/">
 <meta property="og:title" content="Docker 容器连不上本机代理？host.docker.internal 与配置排查">
 <meta property="og:description" content="Docker 容器连不上本机代理怎么办？以 Windows Docker Desktop 为例，解释 host.docker.internal、拉镜像与容器代理配置的区别，提供单次测试和错误对照。">
-<meta property="og:url" content="https://xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="小仓测评">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker 容器连不上本机代理？host.docker.internal 与配置排查">
 <meta name="twitter:description" content="Docker 容器连不上本机代理怎么办？以 Windows Docker Desktop 为例，解释 host.docker.internal、拉镜像与容器代理配置的区别，提供单次测试和错误对照。">
-<meta name="twitter:image" content="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
 <meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-04T09:16:36&#43;08:00"><meta property="article:modified_time" content="2026-10-04T09:56:59&#43;08:00"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="客户端教程">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-04T09:56:59+08:00","datePublished":"2026-10-04T09:16:36+08:00","description":"Docker 容器连不上本机代理怎么办？以 Windows Docker Desktop 为例，解释 host.docker.internal、拉镜像与容器代理配置的区别，提供单次测试和错误对照。","headline":"Docker 容器连不上本机代理？host.docker.internal 与配置排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/","@type":"WebPage"},"url":"https://xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/","name":"Docker 容器连不上本机代理？host.docker.internal 与配置排查","position":2}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-04T09:56:59+08:00","datePublished":"2026-10-04T09:16:36+08:00","description":"Docker 容器连不上本机代理怎么办？以 Windows Docker Desktop 为例，解释 host.docker.internal、拉镜像与容器代理配置的区别，提供单次测试和错误对照。","headline":"Docker 容器连不上本机代理？host.docker.internal 与配置排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-04-docker-host-proxy/","name":"Docker 容器连不上本机代理？host.docker.internal 与配置排查","position":2}]}]}</script>
 
 <script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
-<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/style.css">
-<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/advertisements.css">
-<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/search.css"><script defer src="https://xiaocang.blog/assets/theme/search.js"></script>
-<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/skin.css">
-<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/viewer.css">
-<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/reader.css">
-<link rel="icon" href="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
-<link rel="stylesheet" href="https://xiaocang.blog/assets/theme/artalk.css"><script defer src="https://xiaocang.blog/assets/theme/artalk.js"></script>
-<script defer src="https://xiaocang.blog/assets/theme/theme.js"></script>
-<script defer src="https://xiaocang.blog/assets/theme/reader.js"></script>
-<script defer src="https://xiaocang.blog/assets/theme/viewer.js"></script>
-<script defer src="https://xiaocang.blog/assets/theme/image-viewer.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
 
-<script defer src="https://xiaocang.blog/assets/theme/interactions.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
 
 <meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
 
@@ -47,9 +47,9 @@
 
 <header class="site-header">
 <div class="header-inner">
-<a class="brand" href="https://xiaocang.blog/"><img src="https://xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
-<nav id="site-navigation" aria-label="站点导航"><a href="https://xiaocang.blog/">首页</a><a href="https://xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
-<a class="search-toggle" href="https://xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
 <button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
 <svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
 <svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
@@ -66,7 +66,7 @@
 <div class="article-viewport"><div class="article-scroll">
 <main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
 
-<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">Docker 容器连不上本机代理？host.docker.internal 与配置排查</span></li></ol></nav>
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">Docker 容器连不上本机代理？host.docker.internal 与配置排查</span></li></ol></nav>
 
 
 
@@ -75,7 +75,7 @@
 <div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
 <h1 data-pagefind-meta="title">Docker 容器连不上本机代理？host.docker.internal 与配置排查</h1>
 <div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-10-04T09:16:36&#43;08:00">2026-10-04</time><span><span id="page-views">—</span> 次阅读</span></div>
-<div class="chips" data-pagefind-ignore><a href="https://xiaocang.blog/categories/network-guides/">网络教程</a></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
 </header>
 <div class="prose"><p>Docker 容器连不上电脑里的代理，先检查代理地址是不是写成了 <code>127.0.0.1</code>。在普通隔离网络中，这个地址指向容器自身；宿主机浏览器能上网，不能证明容器能访问宿主机代理。对于 Docker Desktop，优先核对 <code>host.docker.internal</code>、真实代理端口，以及失败发生在拉镜像、构建还是运行中的应用。</p>
 <p>作者：小仓 · 资料核对日期：2026-10-04</p>
@@ -170,14 +170,14 @@
 <span id="page-like-label">点赞</span><span id="page-like-count">—</span>
 </button><p id="page-like-message" role="status"></p>
 </div>
-<div class="article-tags" data-pagefind-ignore><a href="https://xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://xiaocang.blog/tags/client-setup/"># 客户端教程</a></div>
-<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://xiaocang.blog/posts/daily-2026-10-04-browser-secure-dns-proxy/">← 上一篇</a><a href="https://xiaocang.blog/posts/daily-2026-10-03-clash-delay-timeout/">下一篇 →</a></nav>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://www.xiaocang.blog/tags/client-setup/"># 客户端教程</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/daily-2026-10-04-browser-secure-dns-proxy/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-10-03-clash-delay-timeout/">下一篇 →</a></nav>
 <section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
 </article>
 
 <div class="article-rail">
 <aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">先分清：究竟哪一步连不上</a><a class="level-2" href="#heading-1">第一步：找出容器应连接的宿主机地址</a><a class="level-3" href="#heading-2">为什么改成这个域名后仍然失败？</a><a class="level-2" href="#heading-3">第二步：在容器里做一次显式代理测试</a><a class="level-2" href="#heading-4">第三步：把有效配置交给正确的环境</a><a class="level-2" href="#heading-5">两个容易走错的方向</a><a class="level-3" href="#--p-78907890-">给容器加 -p 7890:7890 能连接宿主机代理吗？</a><a class="level-3" href="#-tun-">开启 TUN 就一定不用配置容器了吗？</a></nav></aside>
-<a class="xc-return" href="https://xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
 
 </main>
 </div>
@@ -188,7 +188,7 @@
 
 <footer class="site-footer">
 <nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a><a href="https://t.me/@oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我 <span aria-hidden="true">↗</span></a></nav>
-<div class="xc-footer-line"><a href="https://xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
 </footer>
 
 
@@ -197,9 +197,9 @@
 <header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
 <div class="reader-dialog-body">
 
-<div id="site-search-ui" data-module="https://xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
 
-<pagefind-config bundle-path="https://xiaocang.blog/pagefind/" base-url="https://xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
 <pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
 <pagefind-summary></pagefind-summary>
 <pagefind-results></pagefind-results>
