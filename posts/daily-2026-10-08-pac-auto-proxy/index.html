@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xiaocang-observatory">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PAC 自动代理不生效？脚本地址、DIRECT 与浏览器规则排查 · 小仓测评</title>
+<meta name="description" content="PAC 自动代理不生效如何排查？检查脚本地址、FindProxyForURL 返回值、DIRECT 回退和浏览器代理来源，避免把 PAC 下载成功误判为代理连接成功。">
+<meta name="keywords" content="PAC自动代理不生效,PAC脚本地址,DIRECT回退,浏览器代理排障">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-10-08-pac-auto-proxy/">
+<meta property="og:title" content="PAC 自动代理不生效？脚本地址、DIRECT 与浏览器规则排查">
+<meta property="og:description" content="PAC 自动代理不生效如何排查？检查脚本地址、FindProxyForURL 返回值、DIRECT 回退和浏览器代理来源，避免把 PAC 下载成功误判为代理连接成功。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-10-08-pac-auto-proxy/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PAC 自动代理不生效？脚本地址、DIRECT 与浏览器规则排查">
+<meta name="twitter:description" content="PAC 自动代理不生效如何排查？检查脚本地址、FindProxyForURL 返回值、DIRECT 回退和浏览器代理来源，避免把 PAC 下载成功误判为代理连接成功。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-08T00:02:05&#43;08:00"><meta property="article:modified_time" content="2026-10-08T15:16:51&#43;08:00"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="客户端教程">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-08-pac-auto-proxy/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-08T15:16:51+08:00","datePublished":"2026-10-08T00:02:05+08:00","description":"PAC 自动代理不生效如何排查？检查脚本地址、FindProxyForURL 返回值、DIRECT 回退和浏览器代理来源，避免把 PAC 下载成功误判为代理连接成功。","headline":"PAC 自动代理不生效？脚本地址、DIRECT 与浏览器规则排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-08-pac-auto-proxy/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-08-pac-auto-proxy/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-08-pac-auto-proxy/","name":"PAC 自动代理不生效？脚本地址、DIRECT 与浏览器规则排查","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+
+</head>
+
+<body class="xc-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">PAC 自动代理不生效？脚本地址、DIRECT 与浏览器规则排查</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
+<h1 data-pagefind-meta="title">PAC 自动代理不生效？脚本地址、DIRECT 与浏览器规则排查</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-10-08T00:02:05&#43;08:00">2026-10-08</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>PAC 自动代理不生效时，要按三个阶段排查：浏览器能否获取脚本、脚本为目标网址返回什么、返回的代理是否能连接。PAC 文件能下载，只说明第一阶段可能正常；也不能把某个网站直连直接判定为节点故障。</p>
+<p>作者：小仓。资料核对日期：2026-10-08。本文讨论浏览器的代理自动配置，具体设置入口与执行行为以当前浏览器和组织策略为准。示例用于解释规则，不是完整的日常代理配置，也没有对机场或节点进行实测。</p>
+<h2 id="pac-">PAC 地址和代理地址有什么区别？</h2>
+<p>PAC 是一段代理选择脚本。浏览器调用 <code>FindProxyForURL(url, host)</code>，根据返回值决定直接访问还是使用代理；基本语法见 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Proxy_servers_and_tunneling/Proxy_Auto-Configuration_PAC_file">MDN 的 PAC 文档</a>。填写前先区分以下对象：</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>用途</th>
+<th>常见误填</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PAC 文件地址</td>
+<td>获取包含脚本的文件</td>
+<td>把代理入口当作文件地址</td>
+</tr>
+<tr>
+<td>本地代理地址和端口</td>
+<td>接收浏览器转交的请求</td>
+<td>把远端节点端口直接填进来</td>
+</tr>
+<tr>
+<td>订阅地址</td>
+<td>供客户端导入配置</td>
+<td>把订阅内容当作 PAC 脚本</td>
+</tr>
+</tbody>
+</table>
+<p>地址里出现 <code>.pac</code> 后缀也不能证明响应内容正确。网站可能返回登录页、错误页或重定向后的普通网页，仍然需要查看实际响应。</p>
+<h2 id="heading">第一步：确认浏览器实际采用哪份设置</h2>
+<p>先记录当前浏览器配置来源：系统设置、扩展、浏览器自己的启动设置，还是组织管理策略。不同来源可能相互影响，不能只看系统里已经填了 PAC 就认定浏览器采用了它。Chromium 官方说明列出了直连、手动代理、PAC 与自动发现等配置方式，参见 <a href="https://chromium.googlesource.com/chromium/src/+/main/net/docs/proxy.md">Chromium 代理文档</a>。</p>
+<p>在自己有权调整的设备上，核对实际生效的代理来源；受管理的设备应由管理员确认策略。先保存原来的脚本地址和模式，不要同时修改扩展、系统代理和客户端规则，否则下一次请求成功也难以判断是哪项变化起作用。</p>
+<p>还要确认测试的是同一个浏览器、同一个配置文件。一个浏览器正常，另一个失败，只能作为配置差异的线索。手机 App、终端工具和 TUN 流量是否使用 PAC，要分别核对其支持方式，不能用浏览器测试代替。</p>
+<h2 id="heading-1">第二步：检查脚本获取和内容</h2>
+<p>从发生问题的设备访问 PAC 地址，检查响应是否成功、是否发生跳转，以及最终内容是不是预期的脚本。公开托管文件若突然要求登录，浏览器的自动获取可能与手动登录后的访问不同。不要把带有私有令牌的地址上传到公共检测网站。</p>
+<p>检查脚本是否包含函数定义、括号和有效返回值；服务器应提供适当的 PAC 内容类型。文件内容不能是套在 HTML 页里的代码块。这些文件格式要求可在前面的 MDN 文档中核对。</p>
+<p>如果 PAC 文件由本机代理客户端提供，文件服务端口和代理入口端口可能不同。先确认客户端运行，再分别核对文件服务和代理入口，避免看到一个本地端口正常就推断另一个也正常。改过文件后需要确认浏览器实际加载了新内容；具体刷新方式与缓存行为依浏览器而定，不宜套用统一等待时间。</p>
+<h2 id="heading-2">第三步：为一个固定目标检查返回值</h2>
+<p>下面是用于理解匹配过程的最小示例：</p>
+<pre><code class="language-javascript">function FindProxyForURL(url, host) {
+  if (host === &quot;example.com&quot;) {
+    return &quot;PROXY 127.0.0.1:7890&quot;;
+  }
+  return &quot;DIRECT&quot;;
+}
+</code></pre>
+<p>这段示例只让指定主机使用示例代理，其余请求直接连接，不能复制后当作全站代理方案。应替换为自己的测试目标与实际端口，并在可信脚本中检查对应条件是否会命中。不要执行来源不明的脚本来验证地址。</p>
+<p>先用一个明确的主机名判断规则，再扩展到子域名。<code>example.com</code> 与它的某个子域名并不满足相同的精确比较条件。依赖 HTTPS 完整路径的规则也需要格外核对：浏览器可能向 PAC 提供去掉路径的 URL，相关差异见 MDN 文档。不要据此更改浏览器安全设置，优先考虑主机层面的判断是否足够表达需求。</p>
+<h2 id="direct-">DIRECT 回退为什么容易误判？</h2>
+<p><code>DIRECT</code> 表示直接连接。如果返回列表里写了 <code>PROXY 地址:端口; DIRECT</code>，规则允许在前面的代理不可用时尝试直连；列表与回退机制见 MDN 文档及 Chromium 官方说明。实际选择还受浏览器行为和策略影响，不能只凭脚本文本认定某次请求经过了哪条路径。</p>
+<p>因此，“网站打开了”不能独立证明代理工作正常。测试时应结合目标主机、返回规则和客户端连接记录。反过来，删除某条 <code>DIRECT</code> 也不能保证整台设备所有流量都经过代理：其他程序可能根本不使用这份 PAC。</p>
+<p>若规则使用 DNS 查询函数，还应把域名解析纳入排查。解析参与匹配，并不自动说明发生了隐私泄露，也不代表 DNS 一定被加密。可结合本站 <a href="https://www.xiaocang.blog/posts/dns-fake-ip-troubleshooting/">DNS 与 Fake-IP 排障</a> 分别确认解析方式和代理路径。</p>
+<h2 id="heading-3">用两次受控请求验证修改</h2>
+<p>固定浏览器、测试主机与网络，先记录原规则下的结果，再只修改一项条件进行对照。尽量创建新的请求，已有连接可能继续承载后续访问。日志中没有对应记录时，要先检查日志是否开启、时间是否对齐，不能立即把它解释为直连。</p>
+<p>如果规则已返回正确代理，浏览器仍失败，下一步转向代理入口的监听地址、协议和认证；继续改 PAC 匹配条件通常不能修复连接层问题。如果脚本获取失败，则先恢复文件可访问性，不必先轮换节点。</p>
+<h3 id="heading-4">可以填写的检查记录</h3>
+<p>记录浏览器与版本、实际配置来源、PAC 获取时间和响应、目标主机、预期返回值、实际请求时间、代理日志以及本次唯一修改。测试结束后恢复不需要保留的设置，并确认浏览器采用了预期模式。这样下次排障能按获取、选择、连接三个阶段继续定位。</p>
+<h3 id="pac-tun-">PAC 和规则模式、TUN 是同一种东西吗？</h3>
+<p>PAC 解决支持它的程序如何选择代理；客户端规则和 TUN 还涉及各自的流量处理范围。它们可能共同参与一次访问，但不能互相替代验证。模式范围可参考 <a href="https://www.xiaocang.blog/posts/rule-global-tun-differences/">规则、全局与 TUN 的区别</a>，再针对实际使用的程序检查配置。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://www.xiaocang.blog/tags/client-setup/"># 客户端教程</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/daily-2026-10-09-ssh-dynamic-socks-dns/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-10-08-apt-update-proxy/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#pac-">PAC 地址和代理地址有什么区别？</a><a class="level-2" href="#heading">第一步：确认浏览器实际采用哪份设置</a><a class="level-2" href="#heading-1">第二步：检查脚本获取和内容</a><a class="level-2" href="#heading-2">第三步：为一个固定目标检查返回值</a><a class="level-2" href="#direct-">DIRECT 回退为什么容易误判？</a><a class="level-2" href="#heading-3">用两次受控请求验证修改</a><a class="level-3" href="#heading-4">可以填写的检查记录</a><a class="level-3" href="#pac-tun-">PAC 和规则模式、TUN 是同一种东西吗？</a></nav></aside>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a><a href="https://t.me/@oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我 <span aria-hidden="true">↗</span></a></nav>
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/070b8b80-038b-412e-a67e-cc02af0ac966/","pageTitle":"PAC 自动代理不生效？脚本地址、DIRECT 与浏览器规则排查","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
