@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xiaocang-observatory">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>酒店 Wi-Fi 连上却打不开登录页？VPN 与认证门户排查 · 小仓测评</title>
+<meta name="description" content="公共 Wi-Fi 登录页打不开怎么办？按步骤核对酒店网络、认证门户、VPN 与代理设置，区分 iPhone 已加入网络、Windows 无 Internet 提示和真正的连接故障。">
+<meta name="keywords" content="酒店WiFi登录页打不开,公共WiFi VPN,认证门户排查,captive portal">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-10-10-captive-wifi-vpn-login/">
+<meta property="og:title" content="酒店 Wi-Fi 连上却打不开登录页？VPN 与认证门户排查">
+<meta property="og:description" content="公共 Wi-Fi 登录页打不开怎么办？按步骤核对酒店网络、认证门户、VPN 与代理设置，区分 iPhone 已加入网络、Windows 无 Internet 提示和真正的连接故障。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-10-10-captive-wifi-vpn-login/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="酒店 Wi-Fi 连上却打不开登录页？VPN 与认证门户排查">
+<meta name="twitter:description" content="公共 Wi-Fi 登录页打不开怎么办？按步骤核对酒店网络、认证门户、VPN 与代理设置，区分 iPhone 已加入网络、Windows 无 Internet 提示和真正的连接故障。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-10T09:08:29&#43;08:00"><meta property="article:modified_time" content="2026-10-10T23:52:20&#43;08:00"><meta property="article:tag" content="网络基础"><meta property="article:tag" content="网络排障">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-10-captive-wifi-vpn-login/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-10T23:52:20+08:00","datePublished":"2026-10-10T09:08:29+08:00","description":"公共 Wi-Fi 登录页打不开怎么办？按步骤核对酒店网络、认证门户、VPN 与代理设置，区分 iPhone 已加入网络、Windows 无 Internet 提示和真正的连接故障。","headline":"酒店 Wi-Fi 连上却打不开登录页？VPN 与认证门户排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-10-captive-wifi-vpn-login/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-10-captive-wifi-vpn-login/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-10-captive-wifi-vpn-login/","name":"酒店 Wi-Fi 连上却打不开登录页？VPN 与认证门户排查","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-93N0KR1HGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-93N0KR1HGE');
+</script>
+
+<script defer src="https://www.xiaocang.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-93N0KR1HGE" data-site-hosts="www.xiaocang.blog"></script></head>
+
+<body class="xc-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">酒店 Wi-Fi 连上却打不开登录页？VPN 与认证门户排查</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
+<h1 data-pagefind-meta="title">酒店 Wi-Fi 连上却打不开登录页？VPN 与认证门户排查</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-10-10T09:08:29&#43;08:00">2026-10-10</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>酒店、机场或咖啡店的 Wi-Fi 已连接，却打不开登录页，先确认网络认证是否完成，再检查 VPN 和代理。加入无线网络、通过认证门户、建立 VPN 是三个不同阶段；反复换节点通常不能解决第一阶段的登录要求。</p>
+<p>作者：小仓。资料核对日期：2026-10-10。本文针对需要欢迎页、验证码或接受条款的公共网络，不提供绕过认证的方法。页面名称与客户端选项以当前设备为准，没有对酒店网络或 VPN 服务进行实测。</p>
+<h2 id="-wi-fi">已连接 Wi-Fi，为什么还需要登录？</h2>
+<p>认证门户也称 captive portal。网络可以允许设备访问登录所需的页面，同时暂时限制一般互联网访问，直到满足运营方的接入条件。这个机制可参考 <a href="https://www.rfc-editor.org/rfc/rfc8952.html#section-2.4">RFC 8952 的认证门户架构</a>。因此，Wi-Fi 信号满格和已加入网络，都不能独立证明互联网已经放行。</p>
+<p>先向前台或运营方确认官方网络名称、是否需要认证、正常登录入口与所需信息。不要把名称相似的网络视为同一个网络，也不要因为浏览器弹出欢迎页就认定页面归属正确。Mozilla 提醒用户核对网络与页面来源，见 <a href="https://support.mozilla.org/en-US/kb/captive-portal">认证门户说明</a>。</p>
+<h2 id="heading">先判断卡在哪个阶段</h2>
+<table>
+<thead>
+<tr>
+<th>当前现象</th>
+<th>先检查什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>连无线网络本身都失败</td>
+<td>无线密码、信号与设备接入状态</td>
+</tr>
+<tr>
+<td>已加入网络，但欢迎页不出现</td>
+<td>登录入口、VPN 与代理接入情况</td>
+</tr>
+<tr>
+<td>欢迎页出现，认证被拒绝</td>
+<td>房间号、接入码、条款与运营方提示</td>
+</tr>
+<tr>
+<td>登录完成，普通网站仍不可用</td>
+<td>放行状态与当前网络的其他限制</td>
+</tr>
+<tr>
+<td>普通网站正常，VPN 才失败</td>
+<td>VPN 连接路径、协议和客户端日志</td>
+</tr>
+</tbody>
+</table>
+<p>这是一份诊断顺序，不是根据单一现象判定根因。尤其要记录“登录完成”来自页面的明确确认，还是仅仅关掉了窗口；两者不能混为一谈。</p>
+<h2 id="heading-1">登录页打不开时做一次受控对照</h2>
+<p>先尝试系统提供的“登录此网络”提示，或运营方确认的入口。没有自动出现时，可断开并重新加入同一个 Wi-Fi，再查看系统提示或打开新的浏览器标签页。</p>
+<p>若 VPN 或代理已经运行，在自己可以调整的设备上，按客户端正常方式暂时停止它，再尝试完成网络登录；登录成功后恢复连接。Mozilla 的 <a href="https://support.mozilla.org/en-US/kb/captive-portal">VPN 与认证门户排查步骤</a> 说明了这一顺序：网络可能要求先认证，才能建立 VPN 或代理连接。</p>
+<p>对照期间只测试登录与基础连接，不把这段临时直连当作平常的使用状态。记下停止前后页面是否出现，不要同时更换 DNS、浏览器、节点和网络，否则即使恢复，也无法判断是哪项变化起作用。</p>
+<p>如果暂停 VPN 后依然不能直连，检查客户端是否保留了断线阻断功能。Android 还可配置阻止不经过 VPN 的连接，见 <a href="https://developer.android.com/develop/connectivity/vpn#blocked-connections">Android VPN 官方文档</a>。这类设置可能使“暂停隧道”与“允许网络登录”成为两回事，应查客户端是否支持认证门户。受管理设备由管理员确认接入方式，不自行取消组织策略。</p>
+<h2 id="iphone--ipad">iPhone 或 iPad：重新检查欢迎页状态</h2>
+<p>在设置中的 Wi-Fi 选择目标网络，等待欢迎页；也可进入网络详情尝试加入网络。Apple 的 <a href="https://support.apple.com/en-us/102554">认证 Wi-Fi 使用说明</a> 介绍了这个入口，以及取消登录后的不同状态。</p>
+<p>选择保留“无互联网”连接，只能让设备继续关联网络，不等于认证通过。有些取消操作会使设备离开该网络。排查时重新查看当前连接的网络名称，再回到欢迎页完成运营方要求的步骤，不要只根据 Wi-Fi 图标继续尝试 VPN。</p>
+<p>若手机同时可以使用移动网络，确认测试流量来自需要排查的 Wi-Fi。一个网页打开了，可能不足以证明这条无线网络可用；在能够确认接入方式的条件下，再比较登录前与登录后的相同目标。</p>
+<h2 id="windows">Windows：图标只是连接状态线索</h2>
+<p>Windows 使用 NCSI 探测判断连接状态，代理配置和认证门户的响应都可能影响探测，见 <a href="https://learn.microsoft.com/en-us/windows-server/networking/ncsi/ncsi-overview">NCSI 官方概述</a>。显示“无 Internet”时，应同时核对登录是否完成和实际请求结果，而不是立即重置整个网络。</p>
+<p>Microsoft 的 <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/troubleshoot-ncsi-guidance">NCSI 排障说明</a> 也指出，探测失败不一定表示设备无法访问互联网，并且不应通过关闭主动探测来解决问题。若实际网站正常、图标仍异常，应向网络管理员提供这组差异。</p>
+<p>如果系统配置了 PAC 自动代理，也要确认它是否影响登录入口；先记录现有设置，再做单项对照。PAC 地址、规则与返回入口的检查方法，可参考本站 <a href="https://www.xiaocang.blog/posts/daily-2026-10-08-pac-auto-proxy/">PAC 自动代理排障</a>。</p>
+<h2 id="-vpn">登录成功后，再验证 VPN</h2>
+<p>先确认一个普通 HTTPS 目标能够打开，再启动 VPN，查看连接日志并测试相同目标。这样可区分认证门户尚未放行，与 VPN 建立之后的路由或 DNS 问题。若 VPN 已连接但仍不能访问，可继续阅读 <a href="https://www.xiaocang.blog/posts/vpn-connected-no-internet-windows-11/">Windows VPN 已连接却无法上网的排查清单</a>。</p>
+<p>保留客户端设置一致，在另一个已正常联网的接入环境做对照，也能帮助缩小范围。但两个网络结果不同，只能说明接入环境值得进一步检查，不能单独证明运营方封锁了某种协议。</p>
+<h3 id="heading-2">出现证书警告，还要继续登录吗？</h3>
+<p>先核对入口地址和运营方说明，不通过忽略证书警告来完成认证。网络登录页面异常与 VPN 节点证书异常应分开记录；需要排查信任链时，可参考 <a href="https://www.xiaocang.blog/posts/tls-handshake-certificate-errors/">TLS 与证书错误检查</a>。</p>
+<h3 id="heading-3">联系前台或服务方时如何说明？</h3>
+<p>记录时间、设备与系统、官方网络名称、欢迎页是否出现、认证确认信息、暂停 VPN 前后的差异，以及登录后同一目标的结果。截图遮掉房间号、手机号、验证码和私有接入链接。若多台设备都停在相同认证步骤，把这个现象交给网络运营方，比单独报告“VPN 不好用”更容易定位。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/vpn-basics/"># 网络基础</a><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/daily-2026-10-10-openvpn-auth-tls-errors/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-10-09-mtr-intermediate-loss/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#-wi-fi">已连接 Wi-Fi，为什么还需要登录？</a><a class="level-2" href="#heading">先判断卡在哪个阶段</a><a class="level-2" href="#heading-1">登录页打不开时做一次受控对照</a><a class="level-2" href="#iphone--ipad">iPhone 或 iPad：重新检查欢迎页状态</a><a class="level-2" href="#windows">Windows：图标只是连接状态线索</a><a class="level-2" href="#-vpn">登录成功后，再验证 VPN</a><a class="level-3" href="#heading-2">出现证书警告，还要继续登录吗？</a><a class="level-3" href="#heading-3">联系前台或服务方时如何说明？</a></nav></aside>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a><a href="https://t.me/@oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我 <span aria-hidden="true">↗</span></a></nav>
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/8a64cb75-efd6-4259-9cd4-6d4658c001fd/","pageTitle":"酒店 Wi-Fi 连上却打不开登录页？VPN 与认证门户排查","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
