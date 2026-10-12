@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xiaocang-observatory">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>换 DNS 仍打不开网站？SERVFAIL、NXDOMAIN 与 DNSSEC 排查 · 小仓测评</title>
+<meta name="description" content="网站打不开并返回 SERVFAIL 怎么排查？区分 NXDOMAIN、DNS 超时与 DNSSEC 校验失败，用 dig 对照查询定位解析器和权威 DNS 问题，避免长期关闭安全校验。">
+<meta name="keywords" content="DNS SERVFAIL,DNSSEC校验失败,NXDOMAIN,dig排查">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-10-11-dnssec-servfail-check/">
+<meta property="og:title" content="换 DNS 仍打不开网站？SERVFAIL、NXDOMAIN 与 DNSSEC 排查">
+<meta property="og:description" content="网站打不开并返回 SERVFAIL 怎么排查？区分 NXDOMAIN、DNS 超时与 DNSSEC 校验失败，用 dig 对照查询定位解析器和权威 DNS 问题，避免长期关闭安全校验。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-10-11-dnssec-servfail-check/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="换 DNS 仍打不开网站？SERVFAIL、NXDOMAIN 与 DNSSEC 排查">
+<meta name="twitter:description" content="网站打不开并返回 SERVFAIL 怎么排查？区分 NXDOMAIN、DNS 超时与 DNSSEC 校验失败，用 dig 对照查询定位解析器和权威 DNS 问题，避免长期关闭安全校验。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-11T09:04:17&#43;08:00"><meta property="article:modified_time" content="2026-10-12T20:15:12&#43;08:00"><meta property="article:tag" content="网络基础"><meta property="article:tag" content="网络排障">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-11-dnssec-servfail-check/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-12T20:15:12+08:00","datePublished":"2026-10-11T09:04:17+08:00","description":"网站打不开并返回 SERVFAIL 怎么排查？区分 NXDOMAIN、DNS 超时与 DNSSEC 校验失败，用 dig 对照查询定位解析器和权威 DNS 问题，避免长期关闭安全校验。","headline":"换 DNS 仍打不开网站？SERVFAIL、NXDOMAIN 与 DNSSEC 排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-11-dnssec-servfail-check/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-11-dnssec-servfail-check/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-11-dnssec-servfail-check/","name":"换 DNS 仍打不开网站？SERVFAIL、NXDOMAIN 与 DNSSEC 排查","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-93N0KR1HGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-93N0KR1HGE');
+</script>
+
+<script defer src="https://www.xiaocang.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-93N0KR1HGE" data-site-hosts="www.xiaocang.blog"></script></head>
+
+<body class="xc-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">换 DNS 仍打不开网站？SERVFAIL、NXDOMAIN 与 DNSSEC 排查</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
+<h1 data-pagefind-meta="title">换 DNS 仍打不开网站？SERVFAIL、NXDOMAIN 与 DNSSEC 排查</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-10-11T09:04:17&#43;08:00">2026-10-11</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>网站打不开时，先记录 DNS 查询的完整状态，再决定是否更换节点或解析器。**SERVFAIL 不等于域名不存在，也不自动证明机场线路失效；如果同一解析器正常查询失败、要求跳过 DNSSEC 校验后却返回记录，就应进一步检查签名与信任链。**这是一组诊断线索，不能把未校验的答案直接当成安全修复。</p>
+<p>作者：小仓｜资料核对日期：2026-10-11</p>
+<h2 id="heading">先区分四种查询结果</h2>
+<p>浏览器的“找不到 IP”提示没有展示全部 DNS 过程。排障时应保留查询的域名、类型、解析器和返回状态，而不是只截图错误页面。</p>
+<table>
+<thead>
+<tr>
+<th>结果</th>
+<th>能说明什么</th>
+<th>下一步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SERVFAIL</td>
+<td>解析服务器未能完成查询</td>
+<td>看扩展错误，再检查校验与上游</td>
+</tr>
+<tr>
+<td>NXDOMAIN</td>
+<td>响应表示所查名称不存在</td>
+<td>核对拼写、子域名和域名状态</td>
+</tr>
+<tr>
+<td>NOERROR，但没有所需记录</td>
+<td>查询未报错，不等于有目标 IP</td>
+<td>核对 A、AAAA 等记录类型</td>
+</tr>
+<tr>
+<td>超时，没有响应</td>
+<td>没有收到可用 DNS 回复</td>
+<td>先查解析器可达性与查询路径</td>
+</tr>
+</tbody>
+</table>
+<p>SERVFAIL 与名称错误是不同的响应码，定义见 <a href="https://www.rfc-editor.org/rfc/rfc1035.html#section-4.1.1">RFC 1035 第 4.1.1 节</a>。查询超时甚至还没有拿到这些响应码，因此不应一上来就判定 DNSSEC 损坏。</p>
+<h2 id="heading-1">第一步：固定实际使用的解析路径</h2>
+<p>先把问题写具体：哪个完整域名、哪个应用、开不开 VPN、查询 A 还是 AAAA。不要把 <code>example.net</code>、<code>www.example.net</code> 和某个 API 子域名当成同一个目标。</p>
+<p>代理客户端可能自己解析域名，浏览器也可能使用安全 DNS。对公共解析器执行一条命令，不代表浏览器正在使用它。已有的 <a href="https://www.xiaocang.blog/posts/dns-fake-ip-troubleshooting/">DNS 与 Fake-IP 排查</a> 和 <a href="https://www.xiaocang.blog/posts/daily-2026-10-04-browser-secure-dns-proxy/">浏览器安全 DNS 排查</a> 可以帮助核对这一层。</p>
+<p>建议先保留原设置，用同一个工具重复一次原查询。记录中的解析器地址应与实际测试一致；测试前后同时更换节点、DNS 和浏览器，会让结果失去比较价值。</p>
+<h2 id="-dnssec-">第二步：只改变 DNSSEC 检查标志</h2>
+<p>下面适用于已经安装 <code>dig</code> 的环境。<code>www.example.net.</code> 是占位名称，必须替换为出问题的完整域名；<code>1.1.1.1</code> 只是演示解析器，实际应先测试你使用且可达的解析器。</p>
+<pre><code class="language-bash">dig @1.1.1.1 www.example.net. A +dnssec
+dig @1.1.1.1 www.example.net. A +dnssec +cdflag
+</code></pre>
+<p>第一条请求附带 DNSSEC 记录；第二条额外设置 CD 标志，请求该服务器不执行 DNSSEC 校验。<code>+dnssec</code> 本身不会让 <code>dig</code> 完成一套本地信任链验证，也不保证每个域名都已签名。这些参数的含义见 <a href="https://bind9.readthedocs.io/en/stable/manpages.html#dig-dns-lookup-utility">BIND 的 dig 手册</a>。</p>
+<p>Windows 用户如果借助 WSL 执行命令，记录中要注明测试环境。WSL 的网络与代理接入方式可能和 Windows 浏览器不同；一边成功、另一边失败时，需要先核对两边的路径，可参考 <a href="https://www.xiaocang.blog/posts/daily-2026-10-05-wsl2-windows-proxy/">WSL2 网络与代理排查</a>。不要把子系统的查询结果直接当成 Windows 应用的实测。</p>
+<p>保留完整输出中的 <code>status</code>、<code>flags</code>、<code>SERVER</code>、回答和扩展错误，不要只用 <code>+short</code> 后看到一行地址就结束。若故障涉及 IPv6，再把两条中的 <code>A</code> 都改为 <code>AAAA</code>，维持相同的对照条件。</p>
+<h3 id="heading-2">怎样解释两次结果</h3>
+<ul>
+<li>正常查询是 SERVFAIL，CD 查询返回预期记录：支持“校验环节存在问题”的判断，继续查信任链。</li>
+<li>两次都是 SERVFAIL：这组结果未把问题定位到校验环节，还要看权威服务器和网络错误。</li>
+<li>两次都超时：先处理 DNS 查询通道，不要用超时推断签名错误。</li>
+<li>两次都有记录：这次查询没有重现校验失败，应回到实际应用的解析路径。</li>
+</ul>
+<p><a href="https://bind9.readthedocs.io/en/stable/dnssec-guide.html#how-do-i-know-i-have-a-validation-problem">BIND DNSSEC 指南</a> 使用 CD 查询区分校验故障，也明确提醒不要因为少数域名失败而长期关闭校验。上述测试不会改你的系统 DNS 设置；拿到地址后也不建议写入 hosts 绕过后续检查。</p>
+<h2 id="heading-3">第三步：找扩展错误和信任链线索</h2>
+<p>较新的工具与支持该功能的解析器可能在 <code>OPT PSEUDOSECTION</code> 显示 EDE，即扩展 DNS 错误。它能补充 SERVFAIL 的原因，但并非每个响应都有。</p>
+<table>
+<thead>
+<tr>
+<th>EDE 线索</th>
+<th>优先交给谁核对</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNSSEC Bogus</td>
+<td>域名或解析器管理员检查校验链</td>
+</tr>
+<tr>
+<td>Signature Expired</td>
+<td>域名管理员检查签名续期与有效期</td>
+</tr>
+<tr>
+<td>DNSKEY Missing</td>
+<td>核对父区 DS 与子区 DNSKEY 是否匹配</td>
+</tr>
+<tr>
+<td>No Reachable Authority</td>
+<td>检查权威 DNS 的可达性和委派</td>
+</tr>
+</tbody>
+</table>
+<p>这些错误的含义可查 <a href="https://www.rfc-editor.org/rfc/rfc8914.html#section-4">RFC 8914</a>。EDE 是故障补充信息，不是网站内容安全的证明；分享输出前也要检查是否含有内部域名等信息。</p>
+<p>如果域名最近迁移 DNS 服务，旧的 DS 与新的密钥不匹配是一项具体检查方向。<a href="https://developers.cloudflare.com/dns/dnssec/troubleshooting/">Cloudflare 的 DNSSEC 排障说明</a> 解释了这类迁移问题。访问者通常无法修复目标域名的注册商或权威 DNS 配置，应把查询记录交给站方，而不是自行永久关闭校验。</p>
+<h2 id="heading-4">第四步：比较解析器，但保留结论边界</h2>
+<p>在保持域名、记录类型和网络不变的前提下，再测试另一台可达的校验解析器。多个解析器都失败，可以把注意力转向域名与权威服务器；只有一个失败，则还要调查它的缓存、上游或网络条件。<a href="https://developers.google.com/speed/public-dns/docs/troubleshooting/domains">Google Public DNS 的域名排障文档</a> 提供了这类比较方法。</p>
+<p>另一台解析器成功不等于原问题已被修好，它可能使用不同缓存或校验策略。若只在浏览器失败，应检查应用路径；若只有旧结果持续出现，可继续看 <a href="https://www.xiaocang.blog/posts/daily-2026-10-05-dns-cache-ttl-refresh/">DNS 缓存与 TTL 排查</a>。</p>
+<h2 id="heading-5">给站方的可填写记录</h2>
+<pre><code class="language-text">查询时间与时区：
+完整域名、记录类型：
+应用与 VPN 状态：
+解析器地址：
+正常查询状态、EDE：
+CD 查询状态、EDE：
+另一解析器的对照结果：
+最近是否迁移 DNS 服务（站方填写）：
+</code></pre>
+<p>本文提供的是诊断顺序，没有对某个节点做实测。能复现的查询记录，比“换了 DNS 还是不行”更容易让管理员判断故障属于应用、解析器还是域名签名配置。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/vpn-basics/"># 网络基础</a><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/daily-2026-10-11-pip-proxy-certificate/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-10-10-openvpn-auth-tls-errors/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">先区分四种查询结果</a><a class="level-2" href="#heading-1">第一步：固定实际使用的解析路径</a><a class="level-2" href="#-dnssec-">第二步：只改变 DNSSEC 检查标志</a><a class="level-3" href="#heading-2">怎样解释两次结果</a><a class="level-2" href="#heading-3">第三步：找扩展错误和信任链线索</a><a class="level-2" href="#heading-4">第四步：比较解析器，但保留结论边界</a><a class="level-2" href="#heading-5">给站方的可填写记录</a></nav></aside>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a><a href="https://t.me/@oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我 <span aria-hidden="true">↗</span></a></nav>
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/866191ee-9dcb-463c-9478-d605a5783e64/","pageTitle":"换 DNS 仍打不开网站？SERVFAIL、NXDOMAIN 与 DNSSEC 排查","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
