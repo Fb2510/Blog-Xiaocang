@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.xiaocang.blog/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/airport-review/</loc>
-    <lastmod>2026-10-09T15:38:04Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/client-guides/</loc>
@@ -18,19 +18,19 @@
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/network-guides/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/network-guides/page/2/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/network-guides/page/3/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/network-guides/page/4/</loc>
-    <lastmod>2026-10-12T12:15:12Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/categories/troubleshooting/</loc>
@@ -38,23 +38,27 @@
   </url>
   <url>
     <loc>https://www.xiaocang.blog/page/2/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/page/3/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/page/4/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/page/5/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/page/6/</loc>
+    <lastmod>2026-10-14T08:02:03Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/airport-monthly-vs-usage-plans/</loc>
@@ -174,15 +178,23 @@
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/daily-2026-10-12-browser-http3-quic-proxy/</loc>
-    <lastmod>2026-10-12T12:15:04Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/daily-2026-10-12-wireguard-no-handshake/</loc>
     <lastmod>2026-10-12T12:15:07Z</lastmod>
   </url>
   <url>
+    <loc>https://www.xiaocang.blog/posts/daily-2026-10-14-openvpn-tun-tap-compatibility/</loc>
+    <lastmod>2026-10-14T08:01:41Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiaocang.blog/posts/daily-2026-10-14-windows-nrpt-split-dns/</loc>
+    <lastmod>2026-10-14T08:01:44Z</lastmod>
+  </url>
+  <url>
     <loc>https://www.xiaocang.blog/posts/direct-relay-iepl-iplc-routes/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/posts/dns-fake-ip-troubleshooting/</loc>
@@ -254,46 +266,46 @@
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/</loc>
-    <lastmod>2026-10-09T15:38:04Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/client-setup/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/client-setup/page/2/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/client-setup/page/3/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/network-troubleshooting/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/network-troubleshooting/page/2/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/network-troubleshooting/page/3/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/network-troubleshooting/page/4/</loc>
-    <lastmod>2026-10-12T12:15:12Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/vpn-basics/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/vpn-basics/page/2/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
   <url>
     <loc>https://www.xiaocang.blog/tags/vpn-basics/page/3/</loc>
-    <lastmod>2026-10-12T12:16:38Z</lastmod>
+    <lastmod>2026-10-14T08:02:27Z</lastmod>
   </url>
 </urlset>
