@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xiaocang-observatory">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>下载总从头开始？断点续传、206 与 416 状态码解析 · 小仓测评</title>
+<meta name="description" content="下载中断后为什么不能续传？解析 Range、206、416 与 If-Range，提供小范围探测和续传示例，说明代理对照、文件版本与 SHA256 校验的边界。">
+<meta name="keywords" content="断点续传,HTTP206,HTTP416,Range请求">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-10-15-download-range-resume/">
+<meta property="og:title" content="下载总从头开始？断点续传、206 与 416 状态码解析">
+<meta property="og:description" content="下载中断后为什么不能续传？解析 Range、206、416 与 If-Range，提供小范围探测和续传示例，说明代理对照、文件版本与 SHA256 校验的边界。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-10-15-download-range-resume/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="下载总从头开始？断点续传、206 与 416 状态码解析">
+<meta name="twitter:description" content="下载中断后为什么不能续传？解析 Range、206、416 与 If-Range，提供小范围探测和续传示例，说明代理对照、文件版本与 SHA256 校验的边界。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-15T09:07:45&#43;08:00"><meta property="article:modified_time" content="2026-10-15T22:41:58&#43;08:00"><meta property="article:tag" content="网络基础"><meta property="article:tag" content="网络排障">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-15-download-range-resume/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-15T22:41:58+08:00","datePublished":"2026-10-15T09:07:45+08:00","description":"下载中断后为什么不能续传？解析 Range、206、416 与 If-Range，提供小范围探测和续传示例，说明代理对照、文件版本与 SHA256 校验的边界。","headline":"下载总从头开始？断点续传、206 与 416 状态码解析","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-15-download-range-resume/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-15-download-range-resume/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-15-download-range-resume/","name":"下载总从头开始？断点续传、206 与 416 状态码解析","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-93N0KR1HGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-93N0KR1HGE');
+</script>
+
+<script defer src="https://www.xiaocang.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-93N0KR1HGE" data-site-hosts="www.xiaocang.blog"></script></head>
+
+<body class="xc-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="article-viewport"><div class="article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">下载总从头开始？断点续传、206 与 416 状态码解析</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>小仓阅读室</div>
+<h1 data-pagefind-meta="title">下载总从头开始？断点续传、206 与 416 状态码解析</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-10-15T09:07:45&#43;08:00">2026-10-15</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>下载中断后又从头开始，先检查服务器是否接受指定字节范围，以及远端文件是否仍是同一版本。断点续传不是“把收到的数据直接拼上去”：206、200 和 416 的含义不同，代理开关也可能同时改变出口与访问结果。先用单独的小探测文件核对响应，再决定如何处理已有文件。</p>
+<h2 id="heading">先读状态码，不要先删除半成品</h2>
+<p>HTTP 的 Range 请求用于索取选定范围。服务器可以忽略范围而返回完整内容；收到 206 时，还应核对 <code>Content-Range</code> 是否对应请求的位置。416 表示请求范围无法满足，不能直接当作下载完成。<a href="https://www.rfc-editor.org/rfc/rfc9110.html">来源：RFC 9110 范围请求与状态码</a></p>
+<table>
+<thead>
+<tr>
+<th>最终响应</th>
+<th>能说明什么</th>
+<th>下一步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>206</td>
+<td>返回部分内容</td>
+<td>核对范围、总长度和文件版本</td>
+</tr>
+<tr>
+<td>200</td>
+<td>返回完整内容</td>
+<td>不要追加到原半成品</td>
+</tr>
+<tr>
+<td>416</td>
+<td>范围无法满足</td>
+<td>比较本地长度、远端长度及版本</td>
+</tr>
+<tr>
+<td>401、403 或登录页</td>
+<td>当前访问未获得目标文件</td>
+<td>先核对会话、权限或链接有效性</td>
+</tr>
+</tbody>
+</table>
+<p><code>Accept-Ranges: bytes</code> 是有用线索，但不能代替一次实际请求。即使得到 206，也不能跳过对资源身份的核对。</p>
+<h2 id="heading-1">第一步：用独立文件探测一个字节</h2>
+<p>以下按 PowerShell 7.3 及以上默认的原生命令传参方式编写，以保留后续 ETag 参数内的双引号；使用旧版或 Legacy 模式时，应另行核对引号传递。<a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing?view=powershell-7.5">来源：Microsoft 原生命令参数说明</a></p>
+<p>先检查 <code>curl.exe --version</code>，并把示例地址换成自己有权限访问的真实下载地址；<code>example.com/file.zip</code> 不是本文提供的下载资源。</p>
+<pre><code class="language-powershell">$downloadUrl = 'https://example.com/file.zip'
+curl.exe -q --silent --show-error --location --max-redirs 3 --max-time 20 --max-filesize 1048576 --range 0-0 --header 'Accept-Encoding: identity' --dump-header range-headers.txt --output range-probe.bin &quot;$downloadUrl&quot;
+</code></pre>
+<p>命令请求第一个字节，把响应头和探测内容写到两个独立文件，执行前确认这些文件名没有重要内容。它不会把结果写进原来的下载半成品。<code>-q</code> 放在首项以忽略默认配置，示例也没有关闭证书校验。</p>
+<p>范围限制可能被服务器忽略，所以额外限制时间及最大文件大小。文件大小未知时，下载途中触及阈值也会停止的行为需要 curl 8.4.0 或更新版本；旧版本不能把这个参数当作同等的流量上限。遇到大小限制错误时，也要查看已保存的响应头。<a href="https://curl.se/docs/manpage.html">来源：curl 参数手册</a></p>
+<p>重定向可能留下多组响应头，要看最终文件响应，不能把中间跳转的 302 当成范围请求结果。确认 206 时，留意是否出现对应首字节的 <code>Content-Range</code>；实际格式与总长度以输出为准，本文不提供虚构响应成绩。</p>
+<h2 id="heading-2">第二步：确认半成品属于哪一个版本</h2>
+<p>记录初次下载时保存的最终地址、文件长度、内容编码和强 ETag。仅仅文件名相同，不能证明源文件没有更新；现在查到的 ETag，也不能替代当初半成品对应的标识。</p>
+<p><code>If-Range</code> 可以把“版本仍匹配”作为范围请求条件；不匹配时服务器会忽略范围，改为返回完整表示。带 <code>W/</code> 的弱 ETag 不能用在这个条件里。<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-13.1.5">来源：RFC 9110 的 If-Range 定义</a></p>
+<p>如果下载器自动解压了响应，或者访问地址指向动态生成的内容，也要检查本地字节与远端表示是否一致。没有可靠版本依据时，保留原文件，另存一份完整下载进行比较，比盲目追加更容易验证。</p>
+<h2 id="heading-3">第三步：满足条件后再续传</h2>
+<p>curl 的 <code>--continue-at -</code> 会依据指定本地文件的现有长度确定续传偏移，适合继续同一资源的中断下载；它本身不会证明旧文件的身份。<a href="https://everything.curl.dev/usingcurl/downloads/resume.html">来源：everything curl 续传说明</a></p>
+<p>下面会向指定的 <code>.part</code> 文件续写，先备份文件，并确认它与同一地址、同一版本、相同编码对应。强 ETag 占位内容须替换为初次下载时保存的真实值，保留必要的引号。</p>
+<pre><code class="language-powershell">curl.exe -q --show-error --fail --location --max-redirs 3 --continue-at - --header 'Accept-Encoding: identity' --header 'If-Range: &quot;此前保存的强ETag&quot;' --output archive.zip.part &quot;$downloadUrl&quot;
+</code></pre>
+<p>这里没有再加 <code>--range</code>，因为它与 <code>--continue-at</code> 不能同时用于一次传输。若工具报告不支持续传，先保留错误，不要用 <code>&gt;&gt;</code> 把未知响应硬拼进文件。</p>
+<p>416 可能与本地文件已经达到远端长度有关，也可能是资源变小、地址变化或偏移错误。应先看总长度与版本，再核对文件校验值，不能一看到 416 就宣布成功。</p>
+<h2 id="heading-4">开关代理后结果不同，应该怎么比较？</h2>
+<p>保持地址、请求头、身份状态与文件版本一致，每次使用不同的探测输出文件。对比最终状态、重定向目标、<code>Content-Range</code>、ETag 和编码；不要让后一次测试覆盖前一次证据。</p>
+<p>一次差异不足以认定代理改写了 Range。出口变化可能伴随不同的服务响应；登录状态或链接过期也可能让“下载”变成一个页面。若还没有确认终端确实使用了预期代理，可先按<a href="/posts/daily-2026-09-29-terminal-proxy-curl-git/">终端代理接入检查方法</a>核对路径。</p>
+<p>如果范围请求正常，但传输仍在中途停住，应把“是否支持续传”和“为什么连接中断”分开处理；后者可进一步参考<a href="/posts/daily-2026-09-30-vpn-mtu-troubleshooting/">大文件停滞与 MTU 检查</a>。</p>
+<h2 id="heading-5">结束前验证文件，而不是只看进度条</h2>
+<pre><code class="language-powershell">Get-FileHash -LiteralPath '.\archive.zip.part' -Algorithm SHA256
+</code></pre>
+<p>将结果与可信发布方针对同一版本、同一文件公布的 SHA256 比较。只计算出一个哈希值，并不代表已经验证成功；还要有独立可信的对照值。<a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-filehash?view=powershell-7.5">来源：Microsoft Get-FileHash 文档</a></p>
+<table>
+<thead>
+<tr>
+<th>记录项目</th>
+<th>待填写内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件身份</td>
+<td>最终地址、版本、原始 ETag、编码</td>
+</tr>
+<tr>
+<td>本地状态</td>
+<td>半成品字节数与备份位置</td>
+</tr>
+<tr>
+<td>范围测试</td>
+<td>200、206 或 416，及 Content-Range</td>
+</tr>
+<tr>
+<td>访问路径</td>
+<td>代理方式、测试时段、重定向差异</td>
+</tr>
+<tr>
+<td>最终验证</td>
+<td>发布方校验值、本地校验值、是否一致</td>
+</tr>
+</tbody>
+</table>
+<p>本文命令是操作示例，未在读者设备执行。分享记录前遮住带签名的下载地址、Cookie 和账户令牌；排查范围请求通常不需要公开这些凭据。</p>
+<p>资料核对日期：2026-10-15。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/vpn-basics/"># 网络基础</a><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-10-15-dns-tcp-fallback/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">先读状态码，不要先删除半成品</a><a class="level-2" href="#heading-1">第一步：用独立文件探测一个字节</a><a class="level-2" href="#heading-2">第二步：确认半成品属于哪一个版本</a><a class="level-2" href="#heading-3">第三步：满足条件后再续传</a><a class="level-2" href="#heading-4">开关代理后结果不同，应该怎么比较？</a><a class="level-2" href="#heading-5">结束前验证文件，而不是只看进度条</a></nav></aside>
+<a class="xc-return" href="https://www.xiaocang.blog/"><span aria-hidden="true">←</span> 回到首页，继续探索</a></div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer">
+<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我 <span aria-hidden="true">↗</span></a></nav>
+<div class="xc-footer-line"><a href="https://www.xiaocang.blog/">小仓测评<span class="xc-footer-dot" aria-hidden="true">.</span></a><span>© 2026 小仓测评</span><span class="xc-footer-note">保持好奇，持续探索。</span></div>
+</footer>
+
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/279b3706-18d3-4477-956c-e9aa2345e63c/","pageTitle":"下载总从头开始？断点续传、206 与 416 状态码解析","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body>
+</html>
