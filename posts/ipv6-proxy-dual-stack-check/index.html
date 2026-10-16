@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="network-portal">
+<html lang="zh-CN" data-theme="yifen-notes">
 
 <head>
 <meta charset="utf-8">
@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
 <link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
 <link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
-<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/network-portal-1.0.2.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
 <link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
 <link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
 <link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
@@ -51,7 +51,7 @@
 
 <script defer src="https://www.xiaocang.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-93N0KR1HGE" data-site-hosts="www.xiaocang.blog"></script></head>
 
-<body class="reader-page portal-page article-page">
+<body class="yifen-page article-page">
 <a class="skip" href="#main">跳到正文</a>
 
 <header class="site-header">
@@ -73,14 +73,15 @@
 </header>
 
 <div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
-<main id="main" tabindex="-1" class="shell portal-shell article-shell" data-has-toc="true">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
 
 <nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">IPv6 会绕过代理吗？双栈网络的验证与故障定位</span></li></ol></nav>
 
 
+
 <article data-pagefind-body>
 <header class="article-header">
-<div class="eyebrow" data-pagefind-ignore>知识与指南</div>
+<div class="eyebrow" data-pagefind-ignore>文章</div>
 <h1 data-pagefind-meta="title">IPv6 会绕过代理吗？双栈网络的验证与故障定位</h1>
 <div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-09-29T00:18:16&#43;08:00">2026-09-29</time><span><span id="page-views">—</span> 次阅读</span></div>
 <div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
@@ -124,6 +125,7 @@ curl -6 --connect-timeout 10 --max-time 20 -I https://example.com
 <nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/subscription-update-failed-guide/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/hysteria2-quic-udp-guide/">下一篇 →</a></nav>
 <section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
 </article>
+
 <div class="article-rail">
 <aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#-ipv6">先分清三处 IPv6</a><a class="level-2" href="#heading">双栈为什么会让结果看起来不一致</a><a class="level-2" href="#heading-1">按四步检查是否符合预期</a><a class="level-2" href="#heading-2">命令行对照的正确边界</a><a class="level-2" href="#heading-3">发现路径不一致之后怎么办</a><a class="level-2" href="#heading-4">对外反馈需要哪些信息</a></nav></aside>
 </div>
@@ -135,10 +137,10 @@ curl -6 --connect-timeout 10 --max-time 20 -I https://example.com
 </button>
 </div>
 
-<footer class="site-footer portal-footer">
+<footer class="site-footer compact-footer">
 
-<nav class="friend-links" aria-label="友情链接"><span class="friend-links-label">友情链接</span><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场 <span aria-hidden="true">↗</span></a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧 <span aria-hidden="true">↗</span></a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我 <span aria-hidden="true">↗</span></a></nav>
-<div class="portal-footer-bottom"><span>© 2026 小仓测评</span><span>资源与教程 · 持续更新</span></div>
+<nav class="friend-links" aria-label="友情链接"><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<div class="footer-bottom"><span>© 2026 小仓测评</span></div>
 </footer>
 
 
@@ -161,5 +163,4 @@ curl -6 --connect-timeout 10 --max-time 20 -I https://example.com
 
 <script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/e4d92b43-97fb-4178-abe2-bb70c09dd620/","pageTitle":"IPv6 会绕过代理吗？双栈网络的验证与故障定位","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
 
-</body>
-</html>
+</body></html>
