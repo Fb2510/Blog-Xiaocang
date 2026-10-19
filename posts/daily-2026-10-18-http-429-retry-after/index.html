@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="yifen-notes">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>遇到 429 要等多久？Retry-After、共享出口与重试排查 · 小仓测评</title>
+<meta name="description" content="HTTP 429 要等多久？读懂 Retry-After 秒数与日期，区分共享 IP、账号与资源限流，检查重复刷新和自动重试，附响应对照表与故障记录模板。">
+<meta name="keywords" content="429错误,Retry-After,代理限流,共享出口">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-10-18-http-429-retry-after/">
+<meta property="og:title" content="遇到 429 要等多久？Retry-After、共享出口与重试排查">
+<meta property="og:description" content="HTTP 429 要等多久？读懂 Retry-After 秒数与日期，区分共享 IP、账号与资源限流，检查重复刷新和自动重试，附响应对照表与故障记录模板。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-10-18-http-429-retry-after/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="遇到 429 要等多久？Retry-After、共享出口与重试排查">
+<meta name="twitter:description" content="HTTP 429 要等多久？读懂 Retry-After 秒数与日期，区分共享 IP、账号与资源限流，检查重复刷新和自动重试，附响应对照表与故障记录模板。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-18T09:03:27&#43;08:00"><meta property="article:modified_time" content="2026-10-19T12:19:51&#43;08:00"><meta property="article:tag" content="网络基础"><meta property="article:tag" content="网络排障">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-18-http-429-retry-after/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-19T12:19:51+08:00","datePublished":"2026-10-18T09:03:27+08:00","description":"HTTP 429 要等多久？读懂 Retry-After 秒数与日期，区分共享 IP、账号与资源限流，检查重复刷新和自动重试，附响应对照表与故障记录模板。","headline":"遇到 429 要等多久？Retry-After、共享出口与重试排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-18-http-429-retry-after/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-18-http-429-retry-after/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-18-http-429-retry-after/","name":"遇到 429 要等多久？Retry-After、共享出口与重试排查","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-93N0KR1HGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-93N0KR1HGE');
+</script>
+
+<script defer src="https://www.xiaocang.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-93N0KR1HGE" data-site-hosts="www.xiaocang.blog"></script></head>
+
+<body class="yifen-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">遇到 429 要等多久？Retry-After、共享出口与重试排查</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>文章</div>
+<h1 data-pagefind-meta="title">遇到 429 要等多久？Retry-After、共享出口与重试排查</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-10-18T09:03:27&#43;08:00">2026-10-18</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>遇到 HTTP 429，先停止连续刷新，查看响应里的等待提示和服务方的限额说明。存在有效的 <code>Retry-After</code> 时，至少按它给出的时间等待，再做一次正常请求；没有这个字段时，也不能据此认定可以立即重试。使用 VPN、代理或机场共享出口，并不意味着 429 一定由出口 IP 引起。</p>
+<p>本文解决三个问题：怎么读等待时间、怎样判断共享出口只是线索，以及如何避免自动重试让故障扩大。限流规则由具体服务决定，不能用一套固定分钟数解释所有站点。</p>
+<h2 id="-http-429">先确认真的收到 HTTP 429</h2>
+<p>在浏览器中，优先查看已经记录的失败请求。尚无记录时，先按页面提示等待，再打开开发者工具的 <strong>Network</strong> 面板进行一次正常操作。选中失败请求，查看 <strong>Headers</strong> 中的 HTTP 状态和响应头，并记录实际目标主机。Chrome 官方文档说明了这些字段的查看位置。<a href="https://developer.chrome.com/docs/devtools/network/reference">依据：DevTools 请求与响应头</a></p>
+<p>注意区分三种情况：</p>
+<ul>
+<li>HTTP 状态确实是 429：继续按限流响应排查。</li>
+<li>网页正文或应用弹窗出现数字“429”：还要核对实际请求，可能只是业务提示。</li>
+<li>名称解析失败、连接超时或 TLS 错误：尚不能按 429 的等待规则解释。</li>
+</ul>
+<p>主页能打开、某个接口失败时，记录的是失败接口，不是只记网站首页。订阅更新中的下载、解析与应用阶段，可另看<a href="/posts/subscription-update-failed-guide/">订阅更新失败排查</a>。</p>
+<h2 id="429-">429 能说明什么，不能说明什么</h2>
+<p>RFC 6585 将 429 定义为给定时间内请求过多，响应可以附带 <code>Retry-After</code>。规范没有规定服务端必须怎样识别用户或计数，也可能依据认证凭据、Cookie，按单个资源或更大范围统计。因此，一次 429 不足以证明账号被封、套餐欠费或 IP 信誉差。<a href="https://www.rfc-editor.org/rfc/rfc6585.html">依据：RFC 6585</a></p>
+<p>把它理解为“需要核对本次请求触发的限制”，比直接判定节点坏了更准确。若实际表现是验证码反复出现，应使用<a href="/posts/ip-reputation-captcha-guide/">验证码与共享出口排查</a>，两种现象不能相互替代。</p>
+<h2 id="retry-after-">Retry-After 的两种写法</h2>
+<p>这个字段可以表示收到响应后应等待的秒数，也可以给出一个 HTTP 日期。秒数是非负十进制整数，不是毫秒；HTTP 日期需要按其时区解释。<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.3">依据：RFC 9110 的 Retry-After 定义</a></p>
+<table>
+<thead>
+<tr>
+<th>响应中的形式</th>
+<th>怎样理解</th>
+<th>容易看错的地方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Retry-After: 120</code></td>
+<td>收到后等待 120 秒，即两分钟</td>
+<td>不是 120 毫秒，也不是 120 次重试</td>
+</tr>
+<tr>
+<td>HTTP 日期形式</td>
+<td>等待到字段指定的时刻</td>
+<td>不要把 GMT 时间直接当作北京时间</td>
+</tr>
+<tr>
+<td>没有该字段</td>
+<td>按服务文档和错误说明处理</td>
+<td>不能推导出“没有等待要求”</td>
+</tr>
+</tbody>
+</table>
+<p>秒数例子仅用于解释字段，不是对任何站点的实测。若收到的是日期，记录原值、接收时间与时区；北京时间比 UTC 快八小时。电脑时钟明显不准时，先核对时间，避免把尚未到达的时刻误判为已经过去。</p>
+<p>若日期已过去、值无法解析，或正文与响应头要求不同，保留原始信息并核对服务方说明，不把这些异常自动解释为零等待。等待结束只说明可以按提示再次尝试，不保证下一次一定成功。</p>
+<h2 id="heading">共享出口什么时候值得检查</h2>
+<p>共享代理可能让多个请求呈现相同的来源地址。如果站点明确按 IP 限额，这条信息才有助于解释现象；但服务也可能按账号或令牌统计，单看出口类型无法确定规则。</p>
+<p>先核对同一账号是否同时在多个标签页、设备或工具中自动请求。只关闭自己能够确认的重复刷新任务，保持一个正常操作窗口，等待后再观察。不要一边更换节点，一边重新登录、清除 Cookie 并改客户端，否则无法分辨是时间、身份还是路径改变了结果。</p>
+<table>
+<thead>
+<tr>
+<th>对照结果</th>
+<th>可以继续检查</th>
+<th>不能直接宣布</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>停止重复请求、等待后恢复</td>
+<td>原来的请求频率和并发来源</td>
+<td>不能证明原节点永久正常</td>
+</tr>
+<tr>
+<td>换路径后仍然 429</td>
+<td>账号、令牌或资源对应的规则</td>
+<td>不能只认定所有节点都坏了</td>
+</tr>
+<tr>
+<td>只在某条路径出现</td>
+<td>实际出口、会话及对应时间记录</td>
+<td>不能仅凭一次差异确认按 IP 限流</td>
+</tr>
+</tbody>
+</table>
+<p>需要服务方判断时，提供发生时间、目标主机和响应给出的请求编号。以 Cloudflare 托管的站点为例，其官方说明指出，站长可在限流分析中查看相关 429 事件；访客应把记录交给站点维护者核对，而非仅凭页面样式猜测规则。<a href="https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-429/">依据：Cloudflare 429 说明</a></p>
+<h2 id="heading-1">自动重试要同时限制频率与次数</h2>
+<p>脚本或客户端有自动重试时，先查看它已经发送了多少次、是否有外层定时任务再次启动它。浏览器、客户端和后台任务一起刷新，可能让实际请求数超出你眼前的一次点击。</p>
+<p>对于允许重试的暂时性失败，可以逐步延长等待，并加入随机间隔，避免多个任务同时重试；还应设置最多尝试次数或总耗时。AWS 的架构指南同时强调退避、随机间隔、重试上限，以及避免多层重试相互放大。<a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/rel_mitigate_interaction_failure_limit_retries.html">依据：控制并限制重试</a></p>
+<p>“退避”就是失败后逐渐等久一点，并非越失败越快。它不能取代服务给出的等待要求，也不能解除账号或资源配额。没有统一适用于所有平台的等待序列，应优先采用该服务或工具已有的重试设置。</p>
+<p>提交表单、创建订单或修改资源等操作，还要确认能否安全重复。幂等意味着重复调用不会额外产生预期之外的状态变化；不能确认是否已受理时，应先查询结果，而不是把重复提交当成普通网页刷新。<a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/retry-backoff.html">依据：重试与幂等性</a></p>
+<h2 id="heading-2">等待后仍失败，保留哪些信息</h2>
+<p>完成一次等待和受控重试后，仍持续 429，就整理记录并查看服务公告、账号限额或联系支持。不要用无限循环请求来判断何时恢复。</p>
+<table>
+<thead>
+<tr>
+<th>记录项</th>
+<th>填写内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>时间</td>
+<td>首次失败、收到响应、再次尝试的时间及各自时区</td>
+</tr>
+<tr>
+<td>请求</td>
+<td>应用、目标主机、方法与实际 HTTP 状态</td>
+</tr>
+<tr>
+<td>等待提示</td>
+<td>Retry-After 原值；缺失则明确写“未提供”</td>
+</tr>
+<tr>
+<td>身份与路径</td>
+<td>是否登录、代理接入方式、出站名称；不填写密码或令牌</td>
+</tr>
+<tr>
+<td>请求来源</td>
+<td>标签页、设备、客户端和定时任务中的已知并发</td>
+</tr>
+<tr>
+<td>结果</td>
+<td>等待了多久、只改变了哪个条件、响应有何变化</td>
+</tr>
+</tbody>
+</table>
+<p>日志分享前隐藏 Cookie、认证头和带凭据的完整链接。请求编号只在响应确实提供时记录，不自行编造。</p>
+<h2 id="heading-3">常见问题</h2>
+<h3 id="-retry-after">没有 Retry-After，就统一等一分钟吗？</h3>
+<p>没有这个通用规则。先读服务说明，暂停重复任务；若缺少可核实的恢复条件，就有限次观察并提交记录，不把猜测的分钟数写成服务承诺。</p>
+<h3 id="503--429-">503 也带这个字段，等同于 429 吗？</h3>
+<p>不等同。Retry-After 也可用于 503，表示预计服务暂不可用的时间；判断时要同时看状态、正文和服务公告，不能只看到字段就认定按用户限流。<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.3">依据：RFC 9110</a></p>
+<p>资料核对日期：2026-10-18。本文说明协议和排查方法，未对任何站点或节点进行限流实测。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/vpn-basics/"># 网络基础</a><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-10-17-websocket-disconnect/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#-http-429">先确认真的收到 HTTP 429</a><a class="level-2" href="#429-">429 能说明什么，不能说明什么</a><a class="level-2" href="#retry-after-">Retry-After 的两种写法</a><a class="level-2" href="#heading">共享出口什么时候值得检查</a><a class="level-2" href="#heading-1">自动重试要同时限制频率与次数</a><a class="level-2" href="#heading-2">等待后仍失败，保留哪些信息</a><a class="level-2" href="#heading-3">常见问题</a><a class="level-3" href="#-retry-after">没有 Retry-After，就统一等一分钟吗？</a><a class="level-3" href="#503--429-">503 也带这个字段，等同于 429 吗？</a></nav></aside>
+</div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer compact-footer">
+
+<nav class="friend-links" aria-label="友情链接"><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<div class="footer-bottom"><span>© 2026 小仓测评</span></div>
+</footer>
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/71014530-138f-4e1a-84a7-2f09771ec96f/","pageTitle":"遇到 429 要等多久？Retry-After、共享出口与重试排查","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body></html>
