@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="yifen-notes">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>代理启动提示端口被占用？监听地址与 PID 排查 · 小仓测评</title>
+<meta name="description" content="代理启动提示端口被占用怎么办？使用 Windows 只读命令查询 TCP、UDP 与进程 PID，区分地址冲突和权限错误，解释回环、通配监听及改端口后的配置核对。">
+<meta name="keywords" content="代理端口被占用,10048,监听进程PID,代理启动失败">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-10-26-proxy-port-in-use/">
+<meta property="og:title" content="代理启动提示端口被占用？监听地址与 PID 排查">
+<meta property="og:description" content="代理启动提示端口被占用怎么办？使用 Windows 只读命令查询 TCP、UDP 与进程 PID，区分地址冲突和权限错误，解释回环、通配监听及改端口后的配置核对。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-10-26-proxy-port-in-use/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="代理启动提示端口被占用？监听地址与 PID 排查">
+<meta name="twitter:description" content="代理启动提示端口被占用怎么办？使用 Windows 只读命令查询 TCP、UDP 与进程 PID，区分地址冲突和权限错误，解释回环、通配监听及改端口后的配置核对。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-10-26T09:08:23&#43;08:00"><meta property="article:modified_time" content="2026-10-26T22:48:38&#43;08:00"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="客户端教程">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-26-proxy-port-in-use/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-10-26T22:48:38+08:00","datePublished":"2026-10-26T09:08:23+08:00","description":"代理启动提示端口被占用怎么办？使用 Windows 只读命令查询 TCP、UDP 与进程 PID，区分地址冲突和权限错误，解释回环、通配监听及改端口后的配置核对。","headline":"代理启动提示端口被占用？监听地址与 PID 排查","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-10-26-proxy-port-in-use/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-10-26-proxy-port-in-use/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-10-26-proxy-port-in-use/","name":"代理启动提示端口被占用？监听地址与 PID 排查","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-93N0KR1HGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-93N0KR1HGE');
+</script>
+
+<script defer src="https://www.xiaocang.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-93N0KR1HGE" data-site-hosts="www.xiaocang.blog"></script></head>
+
+<body class="yifen-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">代理启动提示端口被占用？监听地址与 PID 排查</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>文章</div>
+<h1 data-pagefind-meta="title">代理启动提示端口被占用？监听地址与 PID 排查</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-10-26T09:08:23&#43;08:00">2026-10-26</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>代理启动提示“端口被占用”，先核对日志中的本机地址、端口、协议和错误码，再查询监听进程的 PID。PID 是进程编号，用来找到究竟哪个程序正在使用入口。此时本地监听可能尚未建立，反复切换远端节点通常无法解决同一地址上的绑定冲突。</p>
+<p>本文面向 Windows 本机代理的启动故障。下面的命令只读取状态，不终止进程或修改设置。如果报错来自远端服务器，应在对应服务器检查，不能用本机进程信息解释远端占用。</p>
+<h2 id="heading">先分清错误码，保留原始日志</h2>
+<p>日志里的 <code>bind</code> 表示程序尝试绑定本地地址。不要只保留界面上的“启动失败”，还要记录报错时间、TCP 或 UDP、具体地址与端口。</p>
+<table>
+<thead>
+<tr>
+<th>错误线索</th>
+<th>含义与下一步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WSAEADDRINUSE</code>／10048</td>
+<td>地址已被使用；检查现有绑定及尚未完全关闭的连接</td>
+</tr>
+<tr>
+<td><code>WSAEACCES</code>／10013</td>
+<td>访问被拒绝；可能涉及权限或独占绑定，不能简单等同于另一个普通监听进程</td>
+</tr>
+<tr>
+<td><code>WSAEADDRNOTAVAIL</code>／10049</td>
+<td>请求的地址不适用；本地绑定场景应核对该地址是否仍属于本机</td>
+</tr>
+</tbody>
+</table>
+<p>这些是 Windows Socket 错误的区别，并不是某个代理客户端的专属解释。<a href="https://learn.microsoft.com/en-us/windows/win32/winsock/windows-sockets-error-codes-2">依据：Microsoft Winsock 错误码</a></p>
+<p>如果日志已经进入远端连接、证书验证或账号认证阶段，就应另行排查。证书问题可参考<a href="/posts/tls-handshake-certificate-errors/">TLS 握手与信任链检查</a>，不要继续用“端口占用”解释所有失败。</p>
+<h2 id="-tcp-">第一步：查询指定 TCP 端口的监听者</h2>
+<p>在 PowerShell 中，把示例端口替换为日志中的实际数字：</p>
+<pre><code class="language-powershell">$proxyPort = 7890
+Get-NetTCPConnection -State Listen |
+    Where-Object LocalPort -eq $proxyPort |
+    Select-Object LocalAddress, LocalPort, State, OwningProcess
+</code></pre>
+<p><code>7890</code> 只是示例，不是所有客户端的默认端口。这里查询的是本机 TCP 监听，<code>LocalAddress</code> 和 <code>LocalPort</code> 是监听位置，<code>OwningProcess</code> 是所属进程编号。命令的字段与状态选项见 <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection?view=windowsserver2025-ps">Get-NetTCPConnection 文档</a>。</p>
+<p>不要把某条已建立连接的 <code>RemotePort</code> 当成待查的本地监听端口。远端服务器使用 443，与本地代理是否能绑定自己的入口，是不同问题。</p>
+<p>若没有结果，先确认端口没有抄错、查询时客户端处于什么状态，以及是否有权限读取。没有 <code>Listen</code> 记录，不等于已经证明该地址一定可以重新绑定；还可能需要结合连接关闭状态和原始错误继续检查。</p>
+<h2 id="-pid-">第二步：按 PID 识别程序，再决定如何处理</h2>
+<p>取得 <code>OwningProcess</code> 后，查询对应进程：</p>
+<pre><code class="language-powershell">Get-Process -Id 1234 |
+    Select-Object Id, ProcessName
+</code></pre>
+<p><code>1234</code> 必须替换为上一条命令实际返回的 PID。这个查询用于识别当前进程，不会结束它；参数含义见 <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-process?view=powershell-7.6">Get-Process 文档</a>。</p>
+<p>随后对照任务管理器、程序安装位置和客户端日志，确认是另一个代理、同一软件重复启动的内核，还是需要保留的后台服务。进程可能已经退出或重新启动，操作前应重新查询，不能长期沿用截图中的编号。</p>
+<table>
+<thead>
+<tr>
+<th>查询结果</th>
+<th>更合适的处理方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自己刚重复启动的同一客户端</td>
+<td>确认现有实例是否可用，再通过软件正常退出多余实例</td>
+</tr>
+<tr>
+<td>另一个仍需使用的程序</td>
+<td>为两个程序配置不同入口，分别保存原值</td>
+</tr>
+<tr>
+<td>客户端的后台内核或服务</td>
+<td>核对面板是否已连接这个后台，避免再次启动同端口内核</td>
+</tr>
+<tr>
+<td>暂时无法识别的系统或组织服务</td>
+<td>保留进程与错误记录，先查清用途再调整</td>
+</tr>
+</tbody>
+</table>
+<p>关闭面板窗口后，重新查一次监听是否仍在，比仅凭托盘图标判断更可靠。确认确实是重复实例后，再按软件提供的正常退出方式处理。</p>
+<h2 id="heading-1">第三步：地址和协议也要一起看</h2>
+<p>端口数字相同，不代表绑定条件完全相同。记录时应包含地址族、监听地址和协议。</p>
+<table>
+<thead>
+<tr>
+<th>监听地址</th>
+<th>需要怎样理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>127.0.0.1</code></td>
+<td>IPv4 回环地址，供本机访问</td>
+</tr>
+<tr>
+<td><code>0.0.0.0</code></td>
+<td>IPv4 通配监听，并非远端节点地址</td>
+</tr>
+<tr>
+<td><code>::1</code></td>
+<td>IPv6 回环地址</td>
+</tr>
+<tr>
+<td><code>::</code></td>
+<td>IPv6 通配监听；是否同时覆盖 IPv4 还要看双栈配置</td>
+</tr>
+</tbody>
+</table>
+<p>微软文档说明，双栈通配套接字可能同时占用 IPv4 与 IPv6 对应端口；绑定能否共存还与具体地址和套接字选项有关。因此，不能看到 <code>::</code> 就断言它与 IPv4 的报错无关。<a href="https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse">依据：地址复用与独占绑定</a></p>
+<p>若日志指向 UDP，可分别查询该端口的 UDP 端点：</p>
+<pre><code class="language-powershell">$proxyPort = 7890
+Get-NetUDPEndpoint |
+    Where-Object LocalPort -eq $proxyPort |
+    Select-Object LocalAddress, LocalPort, OwningProcess
+</code></pre>
+<p>它显示本地 UDP 端点，不能代替 TCP 监听查询，也不能证明 UDP 数据已到达远端。<a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-netudpendpoint?view=windowsserver2025-ps">依据：Get-NetUDPEndpoint 文档</a></p>
+<p>只在本机使用代理时，应保持所需的本机访问范围；把地址改成通配监听，并不是通用的冲突修复方法，还会改变入口的监听范围。</p>
+<h2 id="heading-2">改端口后，别遗漏使用这个入口的应用</h2>
+<p>确需改端口时，先记录原来的协议、地址和用途，再只修改发生冲突的入口。保存并重新加载后，确认启动日志不再出现该绑定错误，再查询实际监听。</p>
+<p>还要区分 HTTP、SOCKS 和混合入口。以 Mihomo 为例，文档分别列出 <code>port</code>、<code>socks-port</code> 与 <code>mixed-port</code>，其中混合端口支持 HTTP(S) 和 SOCKS5。不要把多个独立监听项都随手设为同一端口。<a href="https://wiki.metacubex.one/en/config/inbound/port/">依据：代理端口说明</a></p>
+<p>控制接口也有自己的用途。Mihomo 的 <code>external-controller</code> 是管理 API 监听地址，并不等同于给浏览器使用的代理入口。面板可以访问，不足以证明代理端口正常。<a href="https://wiki.metacubex.one/en/config/general/">依据：外部控制接口说明</a></p>
+<p>完成修改后，按实际使用情况核对系统代理、浏览器独立设置、终端环境变量和应用内代理是否仍引用旧端口。回到同一个正常访问任务，检查客户端是否出现对应请求。终端验证方法可接着阅读<a href="/posts/daily-2026-09-29-terminal-proxy-curl-git/">Git 与 curl 的代理入口检查</a>。</p>
+<h2 id="heading-3">无法确定时，用这份记录继续反馈</h2>
+<table>
+<thead>
+<tr>
+<th>记录项</th>
+<th>填写内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>时间</td>
+<td>启动报错与查询时间，注明时区</td>
+</tr>
+<tr>
+<td>环境</td>
+<td>Windows、客户端及内核版本</td>
+</tr>
+<tr>
+<td>错误</td>
+<td>原始错误码、TCP／UDP、绑定地址与端口</td>
+</tr>
+<tr>
+<td>进程</td>
+<td>当前 PID、程序名、是否为后台服务</td>
+</tr>
+<tr>
+<td>修改</td>
+<td>本轮只改了哪个入口，原值与新值是什么</td>
+</tr>
+<tr>
+<td>结果</td>
+<td>是否成功监听，使用方是否已更新并产生新请求</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heading-4">重启电脑就能解决吗？</h3>
+<p>重启可能暂时改变占用状态，但若两个程序仍在开机时争用同一入口，问题可能再次出现。优先找出重复实例或配置冲突，重启后的结果也应重新查询确认。</p>
+<p>资料核对日期：2026-10-26。文中端口和 PID 均为示例，未对读者设备或任何节点进行实测。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://www.xiaocang.blog/tags/client-setup/"># 客户端教程</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/daily-2026-10-27-vpn-no-logs-audit/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-10-18-http-429-retry-after/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">先分清错误码，保留原始日志</a><a class="level-2" href="#-tcp-">第一步：查询指定 TCP 端口的监听者</a><a class="level-2" href="#-pid-">第二步：按 PID 识别程序，再决定如何处理</a><a class="level-2" href="#heading-1">第三步：地址和协议也要一起看</a><a class="level-2" href="#heading-2">改端口后，别遗漏使用这个入口的应用</a><a class="level-2" href="#heading-3">无法确定时，用这份记录继续反馈</a><a class="level-3" href="#heading-4">重启电脑就能解决吗？</a></nav></aside>
+</div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer compact-footer">
+
+<nav class="friend-links" aria-label="友情链接"><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<div class="footer-bottom"><span>© 2026 小仓测评</span></div>
+</footer>
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/c05fed7b-f1eb-4c3f-9ab9-1749a5bd1ff8/","pageTitle":"代理启动提示端口被占用？监听地址与 PID 排查","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body></html>
