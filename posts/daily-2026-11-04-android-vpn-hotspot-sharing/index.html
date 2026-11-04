@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="yifen-notes">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安卓开了 VPN，热点里的电脑为什么仍然直连？ · 小仓测评</title>
+<meta name="description" content="安卓手机开了 VPN，电脑连热点为什么仍然直连？解释热点与 USB 共享的覆盖边界，提供实际出口检查步骤，以及电脑自行连接、应用代理和网关方案的选择方法。">
+<meta name="keywords" content="安卓VPN热点共享,手机VPN共享电脑,热点不走VPN,USB共享VPN,代理共享">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-11-04-android-vpn-hotspot-sharing/">
+<meta property="og:title" content="安卓开了 VPN，热点里的电脑为什么仍然直连？">
+<meta property="og:description" content="安卓手机开了 VPN，电脑连热点为什么仍然直连？解释热点与 USB 共享的覆盖边界，提供实际出口检查步骤，以及电脑自行连接、应用代理和网关方案的选择方法。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-11-04-android-vpn-hotspot-sharing/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="安卓开了 VPN，热点里的电脑为什么仍然直连？">
+<meta name="twitter:description" content="安卓手机开了 VPN，电脑连热点为什么仍然直连？解释热点与 USB 共享的覆盖边界，提供实际出口检查步骤，以及电脑自行连接、应用代理和网关方案的选择方法。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-11-04T08:59:02&#43;08:00"><meta property="article:modified_time" content="2026-11-04T11:44:00&#43;08:00"><meta property="article:tag" content="网络排障"><meta property="article:tag" content="客户端教程">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-11-04-android-vpn-hotspot-sharing/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-11-04T11:44:00+08:00","datePublished":"2026-11-04T08:59:02+08:00","description":"安卓手机开了 VPN，电脑连热点为什么仍然直连？解释热点与 USB 共享的覆盖边界，提供实际出口检查步骤，以及电脑自行连接、应用代理和网关方案的选择方法。","headline":"安卓开了 VPN，热点里的电脑为什么仍然直连？","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-11-04-android-vpn-hotspot-sharing/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-11-04-android-vpn-hotspot-sharing/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-11-04-android-vpn-hotspot-sharing/","name":"安卓开了 VPN，热点里的电脑为什么仍然直连？","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-93N0KR1HGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-93N0KR1HGE');
+</script>
+
+<script defer src="https://www.xiaocang.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-93N0KR1HGE" data-site-hosts="www.xiaocang.blog"></script></head>
+
+<body class="yifen-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">安卓开了 VPN，热点里的电脑为什么仍然直连？</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>文章</div>
+<h1 data-pagefind-meta="title">安卓开了 VPN，热点里的电脑为什么仍然直连？</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-11-04T08:59:02&#43;08:00">2026-11-04</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>安卓手机开着 VPN，再把热点分享给电脑，不代表电脑会自动经过手机的隧道。普通热点共享的是联网能力；手机自身应用与热点设备转发的流量，可能走不同处理路径。先在电脑上验证实际出口，再决定让电脑自行连接 VPN，还是使用明确支持的代理共享方案。</p>
+<h2 id="heading">手机能用，为什么电脑没有继承</h2>
+<p><a href="https://developer.android.com/develop/connectivity/vpn">Android 的 VPN 开发文档</a>说明，VPN 应用通过本地虚拟接口接入设备流量，再将相应数据送往 VPN 网关。另一方面，<a href="https://source.android.com/docs/core/ota/modular-system/tethering">AOSP 的 Tethering 文档</a>把热点、USB、蓝牙等联网共享作为转发功能描述。两个功能同时开启，并不等于它们已被配置成一条连续的隧道路径。</p>
+<p>这不是只靠图标推测的区别。Google 在其 <a href="https://support.google.com/pixelphone/answer/2819573?hl=en">Pixel VPN 帮助</a>中，明确把 USB 和 Wi-Fi 热点的共享流量列为该 VPN 不保护的数据。这个例子说明，手机显示 VPN 已连接，也不能据此承诺热点设备受到同样保护。</p>
+<p>不同厂商系统和专门的共享实现可能存在差异。遇到标称“共享 VPN”的功能，应核对它支持的机型、系统、接入方式和转发范围，再做验证；不要把一个设备上的结果推广到全部安卓手机。</p>
+<table>
+<thead>
+<tr>
+<th>当前做法</th>
+<th>应怎样理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>手机连接 VPN，电脑只连接普通热点</td>
+<td>电脑获得上网入口，VPN 路径仍需另查</td>
+</tr>
+<tr>
+<td>电脑连接热点后，再运行自己的 VPN</td>
+<td>手机提供基础连接，电脑建立自己的隧道</td>
+</tr>
+<tr>
+<td>电脑软件显式连接手机的 HTTP/SOCKS 代理</td>
+<td>检查该软件的代理路径，不代表整台电脑被接管</td>
+</tr>
+<tr>
+<td>使用专门的网关或系统转发功能</td>
+<td>按该实现验证路由、DNS、双栈与断线处理</td>
+</tr>
+</tbody>
+</table>
+<h2 id="heading-1">用三步确认电脑到底走哪里</h2>
+<h3 id="1-">1. 先排除电脑还有别的出口</h3>
+<p>记录手机型号、Android 版本、VPN 客户端与节点，以及热点使用的上游连接。电脑端同时检查有线网卡、其他 Wi-Fi、自己的 VPN 和浏览器代理，避免把另一条连接的结果误认为来自手机。</p>
+<p>若可以临时断开其他连接，保留原设置后逐项处理；组织管理的连接不要自行改动。仅仅看到电脑连上了热点名称，不足以证明它的新请求一定从该接口发出。</p>
+<h3 id="2-">2. 分别在手机和电脑发起新请求</h3>
+<p>固定节点，在两台设备上打开同一个可信的出口检测页面，确认页面已重新请求，记录完整 IP、地址族与时间。手机侧还要确认这个浏览器没有被分流排除。国家名称只能作辅助信息，不能代替出口地址和路径记录。</p>
+<p>如果电脑仍呈现基础连接的运营商出口，而手机呈现 VPN 出口，这支持“两者没有共享同一隧道”的判断。若没有可信的基础出口对照，先记为路径不同或尚未确认，不要凭一个陌生 IP 下结论。</p>
+<p>两台设备显示相同 IP，也只能说明这两次请求呈现相同出口，不能证明所有应用都被覆盖。接下来还要看电脑真正使用的软件，以及客户端是否记录了对应连接。</p>
+<h3 id="3-">3. 把失败结果和覆盖范围分开</h3>
+<p>电脑打不开网站，可能是热点本身未联网、DNS、应用设置或目标服务的问题。先确认一个普通的非敏感目标可访问，再排查指定服务；“打不开”本身不能证明 VPN 已经共享。</p>
+<p>AOSP 文档说明联网共享支持 IPv4 与 IPv6。因此，一次只看到 IPv4 的检测不能代表双栈都符合预期，具体方法可参照本站 <a href="/posts/ipv6-proxy-dual-stack-check/">IPv6 代理验证指南</a>。DNS 解析与网页连接也要分别核对，不能用单个页面为整台电脑作保证。</p>
+<h2 id="-vpn">需要电脑走 VPN，可以怎样安排</h2>
+<h3 id="heading-2">电脑可以安装客户端：在电脑上建立连接</h3>
+<p>这是路径比较明确的做法：电脑先通过手机热点联网，再用电脑自己的客户端连接服务。<a href="https://protonvpn.com/support/share-vpn-connection-android-hotspot">Proton 的安卓热点说明</a>也将接收设备自行运行 VPN 列为替代方法。</p>
+<p>操作前核对服务的设备授权、同时连接限制及电脑端协议支持，不能假定手机订阅可无限共用。连接后在电脑端验证目标应用、出口与 DNS；手机端是否还需要保留自己的 VPN，应按手机自身用途决定。</p>
+<h3 id="heading-3">只需要少数应用：核对显式代理共享</h3>
+<p>如果手机端工具明确提供供局域网设备使用的 HTTP 或 SOCKS 入口，可按该工具文档，让电脑上支持代理的软件连接这个入口。必须同时确认监听地址、端口、认证方式与最终出站；单有一个“允许局域网”开关，不足以证明转发会经过预期节点。</p>
+<p>电脑配置中的服务器地址应是电脑能够访问到的手机地址。不要照抄手机上的 <code>127.0.0.1</code>：在电脑里，它指向电脑自己。也不要凭教程示例猜端口，协议类型与真实监听端口必须对应。</p>
+<p>显式代理只覆盖实际使用它的请求，UDP、DNS 和不读代理设置的软件需要另外核对。出现浏览器正常而终端失败时，可继续看本站<a href="/posts/daily-2026-09-29-terminal-proxy-curl-git/">终端代理排查</a>。共享入口应限制给自己的设备，配置认证和监听范围，使用后关闭不再需要的入口。</p>
+<h3 id="heading-4">接收设备无法安装：先核对网关支持</h3>
+<p>电视、游戏机等设备若无法运行所需客户端，可以评估已有路由器或网关是否明确支持相应协议及手机上联方式。VPN 网关与手机普通热点是不同方案，不能仅凭“支持 USB”就断言支持该手机的联网共享，更不能直接假定所有下游设备都走隧道。按实际配置验证后，再决定是否需要新增设备。</p>
+<h2 id="heading-5">两个常见误区</h2>
+<h3 id="-usb">换成 USB，或者开启阻止直连，就会自动共享吗？</h3>
+<p>不能这样推断。Google 上述文档明确包含 USB 共享的例外；<a href="https://github.com/mullvad/mullvadvpn-app/blob/main/docs/security.md">Mullvad 的 Android 安全文档</a>也把热点客户端流量列为系统豁免项，并说明开启阻止未经过 VPN 的连接仍有此边界。电脑的覆盖范围应单独验证。</p>
+<h3 id="-vpn-">另装一个共享软件，原来的 VPN 为什么断了？</h3>
+<p>先查新软件是否也申请并启动了 Android VPN 服务，而非普通的代理监听。若发生服务接管，可按本站<a href="/posts/daily-2026-10-05-android-vpn-app-conflict/">安卓 VPN 冲突排查</a>核对。不要只凭应用名称就假定两款工具能够串接。</p>
+<table>
+<thead>
+<tr>
+<th>复查项目</th>
+<th>你的记录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>手机系统、客户端、节点及上游连接</td>
+<td></td>
+</tr>
+<tr>
+<td>电脑实际连接与其他代理/VPN</td>
+<td></td>
+</tr>
+<tr>
+<td>两端新请求的时间、IP 与地址族</td>
+<td></td>
+</tr>
+<tr>
+<td>使用普通热点、电脑 VPN 或显式代理</td>
+<td></td>
+</tr>
+<tr>
+<td>目标应用、DNS 与未覆盖项目</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>资料核对日期：2026-11-04。本文依据官方资料解释共享边界，未对具体手机或服务进行共享实测。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a><a href="https://www.xiaocang.blog/tags/client-setup/"># 客户端教程</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-11-03-vpn-kill-switch-scope/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">手机能用，为什么电脑没有继承</a><a class="level-2" href="#heading-1">用三步确认电脑到底走哪里</a><a class="level-3" href="#1-">1. 先排除电脑还有别的出口</a><a class="level-3" href="#2-">2. 分别在手机和电脑发起新请求</a><a class="level-3" href="#3-">3. 把失败结果和覆盖范围分开</a><a class="level-2" href="#-vpn">需要电脑走 VPN，可以怎样安排</a><a class="level-3" href="#heading-2">电脑可以安装客户端：在电脑上建立连接</a><a class="level-3" href="#heading-3">只需要少数应用：核对显式代理共享</a><a class="level-3" href="#heading-4">接收设备无法安装：先核对网关支持</a><a class="level-2" href="#heading-5">两个常见误区</a><a class="level-3" href="#-usb">换成 USB，或者开启阻止直连，就会自动共享吗？</a><a class="level-3" href="#-vpn-">另装一个共享软件，原来的 VPN 为什么断了？</a></nav></aside>
+</div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer compact-footer">
+
+<nav class="friend-links" aria-label="友情链接"><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<div class="footer-bottom"><span>© 2026 小仓测评</span></div>
+</footer>
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/8f492c62-60a8-40e9-a17d-07ad127584e3/","pageTitle":"安卓开了 VPN，热点里的电脑为什么仍然直连？","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body></html>
