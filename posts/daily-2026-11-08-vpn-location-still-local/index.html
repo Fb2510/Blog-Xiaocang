@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="yifen-notes">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>开了 VPN，为什么网站还显示我原来的位置？ · 小仓测评</title>
+<meta name="description" content="VPN 换了节点，网站位置为什么没变？从浏览器定位权限、账号记录和网站实际使用的线路入手，按步骤检查原因，附 Chrome 设置方法与简单对照表。">
+<meta name="keywords" content="VPN定位不变,VPN位置不对,网站显示原来位置,Chrome定位权限">
+<meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://www.xiaocang.blog/posts/daily-2026-11-08-vpn-location-still-local/">
+<meta property="og:title" content="开了 VPN，为什么网站还显示我原来的位置？">
+<meta property="og:description" content="VPN 换了节点，网站位置为什么没变？从浏览器定位权限、账号记录和网站实际使用的线路入手，按步骤检查原因，附 Chrome 设置方法与简单对照表。">
+<meta property="og:url" content="https://www.xiaocang.blog/posts/daily-2026-11-08-vpn-location-still-local/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="小仓测评">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png"><meta property="og:image:alt" content="小仓测评">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="开了 VPN，为什么网站还显示我原来的位置？">
+<meta name="twitter:description" content="VPN 换了节点，网站位置为什么没变？从浏览器定位权限、账号记录和网站实际使用的线路入手，按步骤检查原因，附 Chrome 设置方法与简单对照表。">
+<meta name="twitter:image" content="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<meta name="author" content="小仓"><meta property="article:published_time" content="2026-11-08T20:52:01&#43;08:00"><meta property="article:modified_time" content="2026-11-08T21:09:46&#43;08:00"><meta property="article:tag" content="网络基础"><meta property="article:tag" content="网络排障">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.xiaocang.blog/posts/daily-2026-11-08-vpn-location-still-local/#article","@type":"BlogPosting","author":{"@type":"Person","name":"小仓"},"dateModified":"2026-11-08T21:09:46+08:00","datePublished":"2026-11-08T20:52:01+08:00","description":"VPN 换了节点，网站位置为什么没变？从浏览器定位权限、账号记录和网站实际使用的线路入手，按步骤检查原因，附 Chrome 设置方法与简单对照表。","headline":"开了 VPN，为什么网站还显示我原来的位置？","inLanguage":"zh-CN","mainEntityOfPage":{"@id":"https://www.xiaocang.blog/posts/daily-2026-11-08-vpn-location-still-local/","@type":"WebPage"},"url":"https://www.xiaocang.blog/posts/daily-2026-11-08-vpn-location-still-local/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://www.xiaocang.blog/","name":"小仓测评","position":1},{"@type":"ListItem","item":"https://www.xiaocang.blog/posts/daily-2026-11-08-vpn-location-still-local/","name":"开了 VPN，为什么网站还显示我原来的位置？","position":2}]}]}</script>
+
+<script>(()=>{let mode='system';try{const saved=localStorage.getItem('reader-theme');if(['system','light','dark'].includes(saved))mode=saved}catch{}const root=document.documentElement;root.dataset.colorMode=mode;root.classList.toggle('dark',mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))})();</script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/style.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/advertisements.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/search.css"><script defer src="https://www.xiaocang.blog/assets/theme/search.js"></script>
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/skin.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/viewer.css">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/reader.css">
+<link rel="icon" href="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png">
+<link rel="stylesheet" href="https://www.xiaocang.blog/assets/theme/artalk.css"><script defer src="https://www.xiaocang.blog/assets/theme/artalk.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/theme.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/reader.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/viewer.js"></script>
+<script defer src="https://www.xiaocang.blog/assets/theme/image-viewer.js"></script>
+
+<script defer src="https://www.xiaocang.blog/assets/theme/interactions.js"></script>
+
+<meta name="msvalidate.01" content="3D562902FFD6655EA5B649095B7D8365" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-93N0KR1HGE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-93N0KR1HGE');
+</script>
+
+<script defer src="https://www.xiaocang.blog/assets/xblog/google-analytics.js" data-xblog-google-analytics="G-93N0KR1HGE" data-site-hosts="www.xiaocang.blog"></script></head>
+
+<body class="yifen-page article-page">
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="https://www.xiaocang.blog/"><img src="https://www.xiaocang.blog/assets/media/3531437b-11cc-40a7-b4a2-14c656ec182e.png" alt="" width="38" height="38"><span>小仓测评</span></a>
+<nav id="site-navigation" aria-label="站点导航"><a href="https://www.xiaocang.blog/">首页</a><a href="https://www.xiaocang.blog/categories/airport-review/">机场推荐</a><a href="https://www.xiaocang.blog/categories/client-guides/">客户端教程</a><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a><a href="https://www.xiaocang.blog/categories/troubleshooting/">常见问题</a><a href="https://www.xiaocang.blog/categories/industry-updates/">行业观察</a></nav>
+<a class="search-toggle" href="https://www.xiaocang.blog/search/" data-open-dialog="search-dialog" aria-haspopup="dialog" aria-controls="search-dialog" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></a>
+<button id="theme-mode" class="theme-toggle theme-cycle" type="button" aria-label="明暗模式：跟随系统，点击切换为明亮" title="跟随系统 · 点击切换为明亮">
+<svg class="theme-icon-system" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+<svg class="theme-icon-moon" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/></svg>
+<svg class="theme-icon-sun" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<span id="theme-mode-status" class="visually-hidden" role="status" aria-live="polite"></span>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" aria-label="打开菜单" title="打开菜单">
+<svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+<svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+</button>
+</div>
+</header>
+
+<div class="page-viewport article-viewport"><div class="page-scroll article-scroll">
+<main id="main" tabindex="-1" class="shell article-shell" data-has-toc="true">
+
+<nav class="breadcrumbs" aria-label="面包屑导航"><ol><li><a href="https://www.xiaocang.blog/">小仓测评</a></li><li><span aria-current="page">开了 VPN，为什么网站还显示我原来的位置？</span></li></ol></nav>
+
+
+
+<article data-pagefind-body>
+<header class="article-header">
+<div class="eyebrow" data-pagefind-ignore>文章</div>
+<h1 data-pagefind-meta="title">开了 VPN，为什么网站还显示我原来的位置？</h1>
+<div class="metadata" data-pagefind-ignore><span>小仓</span><time datetime="2026-11-08T20:52:01&#43;08:00">2026-11-08</time><span><span id="page-views">—</span> 次阅读</span></div>
+<div class="chips" data-pagefind-ignore><a href="https://www.xiaocang.blog/categories/network-guides/">网络教程</a></div>
+</header>
+<div class="prose"><p>开了 VPN，网站仍显示你原来的城市，不一定是 VPN 没起作用。网站除了看网络地址，还可能参考你允许它读取的位置，以及账号里留下的信息。先看它根据什么判断，再决定要不要换线路。</p>
+<p>例如，你选了一条日本线路，搜索页面却仍推荐家附近的餐厅。这时只盯着“日本”两个字反复重连，很容易越试越迷糊。下面从最容易检查的地方说起。</p>
+<h2 id="heading">先分清：网络地址和你所在的位置</h2>
+<p>网站看到的 IP 地址，可以理解为你上网时使用的“门牌号”。连接经过 VPN 后，网站通常看到的是 VPN 那一端的地址，但这不会自动改掉你在账号中填写的住址。</p>
+<p>通过网络地址判断城市也可能有误差。提供这类数据的 MaxMind 明确说明，结果无法保证百分之百准确，不同公司的判断也未必一致。所以，查询页面上的城市名称只能作为线索。<a href="https://support.maxmind.com/knowledge-base/articles/maxmind-geolocation-accuracy">查看 MaxMind 的说明</a></p>
+<p>实际检查时，把两件事分别记下来：<strong>网络地址有没有变化，网页显示的位置有没有变化。</strong> 两者可能同时变，也可能只变一个。</p>
+<h2 id="heading-1">第一步：看看网站有没有定位权限</h2>
+<p>你可能见过“是否允许此网站获取你的位置”这样的提示。如果之前点过允许，网站就可能使用浏览器提供的位置，不能只看你选了哪条 VPN 线路。</p>
+<p>以电脑上的 Chrome 为例，可以这样检查：</p>
+<ol>
+<li>打开浏览器设置，进入“隐私和安全”。</li>
+<li>找到“网站设置”，再打开“位置信息”。</li>
+<li>检查目标网站是否在允许列表中。</li>
+<li>如果不希望它读取位置，修改这个网站的权限，再重新打开页面。</li>
+</ol>
+<p>这项设置控制的是浏览器是否向网站提供位置。Google 的说明也提醒，电脑系统里的位置设置可能影响结果。<a href="https://support.google.com/chrome/answer/142065?hl=zh-Hans&amp;co=GENIE.Platform%3DDesktop">查看 Chrome 官方步骤</a></p>
+<p>不用为了测试，把所有网站的权限都改一遍。先处理出问题的那一个，更容易看出变化来自哪里。</p>
+<h2 id="heading-2">第二步：看看页面是不是记住了以前的信息</h2>
+<p>以 Google 搜索为例，它可能综合设备位置、账号中的住址、过去的活动和网络地址来判断地区。搜索结果页底部有时会说明位置来自哪里，可以先看这里，而不是只看推荐了哪家店。<a href="https://support.google.com/websearch/answer/179386?hl=zh-Hans&amp;co=GENIE.Platform%3DDesktop">查看 Google 的位置说明</a></p>
+<p>如果想做一个简单对照，可以保持当前线路不变，关闭已有的全部无痕窗口，再开一个新的无痕窗口，先不登录账号，搜索相同内容，并记下是否允许定位。</p>
+<p>Chrome 的无痕窗口会使用单独的浏览过程，但它不会让你在网站面前完全隐身。<a href="https://support.google.com/chrome/answer/95464?hl=zh-Hans">查看无痕模式的作用</a></p>
+<p>如果普通窗口和无痕窗口的结果不同，只能说明登录状态或浏览器保存的信息等因素值得继续检查，不能马上认定某一个因素就是原因。也没有必要一上来清空所有历史记录，让自己到处重新登录。</p>
+<h2 id="-vpn">第三步：确认这个网站有没有经过 VPN</h2>
+<p>有些代理软件会让不同网站走不同线路。例如，一个网站经过你选择的节点，另一个仍使用原来的网络。Mihomo 的官方规则就支持按网站地址分别安排连接方式。<a href="https://wiki.metacubex.one/config/rules/">查看规则说明</a></p>
+<p>因此，一个查询页面显示了新的网络地址，也不能说明其他网站一定用了同一条线路。</p>
+<p>如果软件提供连接记录，重新打开目标网站后，找它对应的记录，看看显示的是所选线路，还是“直连”。“直连”就是这次连接没有经过你选的代理线路。看不懂设置时，可以继续读本站的<a href="https://www.xiaocang.blog/posts/rule-global-tun-differences/">规则与全局模式说明</a>。</p>
+<p>先确认目标网站实际走了哪里，再调整对应设置。不要同时换线路、清记录、改权限，否则即使恢复正常，也很难知道是哪一步起了作用。</p>
+<h2 id="heading-3">按这个顺序检查，更容易找出原因</h2>
+<table>
+<thead>
+<tr>
+<th>你看到的情况</th>
+<th>接下来先做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>网络地址变了，网页仍显示旧城市</td>
+<td>查看该网站的定位权限和位置来源提示</td>
+</tr>
+<tr>
+<td>普通窗口与无痕窗口显示不同</td>
+<td>保持线路不变，进一步对照登录状态</td>
+</tr>
+<tr>
+<td>两个地址查询网站显示不同城市</td>
+<td>先核对它们显示的地址是否相同，再考虑位置数据的差异</td>
+</tr>
+<tr>
+<td>目标网站的连接记录显示“直连”</td>
+<td>检查这个网站的线路设置</td>
+</tr>
+<tr>
+<td>城市显示符合预期，视频还是不能播放</td>
+<td>根据平台的具体错误提示继续检查</td>
+</tr>
+</tbody>
+</table>
+<p>最后一种情况是另一个问题：城市显示正确，并不代表账号或内容一定符合播放条件，可以接着看<a href="https://www.xiaocang.blog/posts/streaming-access-region-troubleshooting/">视频不能播放的排查方法</a>。</p>
+<p>遇到位置没变，先记下“哪个网站、什么设备、是否登录、是否允许定位、当时用了哪条线路”。带着这些信息再检查，比只说“VPN 定位不对”更容易找到下一步。</p>
+<p>资料核对日期：2026 年 11 月 8 日。本文依据公开说明整理，未对具体 VPN 服务进行实测；不同网站的判断方式可能不同。</p>
+</div>
+<div class="article-likes" data-pagefind-ignore>
+<button id="page-like" class="like-button" type="button" aria-pressed="false" aria-describedby="page-like-message" disabled>
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+<span id="page-like-label">点赞</span><span id="page-like-count">—</span>
+</button><p id="page-like-message" role="status"></p>
+</div>
+<div class="article-tags" data-pagefind-ignore><a href="https://www.xiaocang.blog/tags/vpn-basics/"># 网络基础</a><a href="https://www.xiaocang.blog/tags/network-troubleshooting/"># 网络排障</a></div>
+<nav class="pagination" aria-label="相邻文章" data-pagefind-ignore><a href="https://www.xiaocang.blog/posts/%E6%9C%BA%E5%9C%BA%E8%AF%84%E6%B5%8B%E4%B8%8E%E6%8E%A8%E8%8D%90/">← 上一篇</a><a href="https://www.xiaocang.blog/posts/daily-2026-11-07-vpn-device-session-limits/">下一篇 →</a></nav>
+<section class="comments-section" data-pagefind-ignore><h2>评论</h2><div id="comments"></div></section>
+</article>
+
+<div class="article-rail">
+<aside class="toc"><div>本篇目录</div><nav aria-label="文章目录"><a class="level-2" href="#heading">先分清：网络地址和你所在的位置</a><a class="level-2" href="#heading-1">第一步：看看网站有没有定位权限</a><a class="level-2" href="#heading-2">第二步：看看页面是不是记住了以前的信息</a><a class="level-2" href="#-vpn">第三步：确认这个网站有没有经过 VPN</a><a class="level-2" href="#heading-3">按这个顺序检查，更容易找出原因</a></nav></aside>
+</div>
+
+</main>
+</div>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="返回顶部" title="返回顶部" hidden>
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14M12 20V8m-5 5 5-5 5 5"/></svg>
+</button>
+</div>
+
+<footer class="site-footer compact-footer">
+
+<nav class="friend-links" aria-label="友情链接"><a href="https://goflybit.com/#/register?code=VDhOlcf4" target="_blank" rel="noopener noreferrer">FlyBit机场</a><a href="https://home.99ba2026.best/#/register?code=lsE7jbti" target="_blank" rel="noopener noreferrer">99吧</a><a href="https://t.me/oldsix985" target="_blank" rel="noopener noreferrer">Telegram联系我</a></nav>
+<div class="footer-bottom"><span>© 2026 小仓测评</span></div>
+</footer>
+
+
+<dialog id="search-dialog" class="reader-dialog site-search" aria-labelledby="search-title" data-reader-dialog data-pagefind-ignore>
+<header class="reader-dialog-header"><h2 id="search-title">搜索文章</h2><button class="dialog-close" type="button" data-close-dialog aria-label="关闭搜索" title="关闭搜索">×</button></header>
+<div class="reader-dialog-body">
+
+<div id="site-search-ui" data-module="https://www.xiaocang.blog/pagefind/pagefind-component-ui.js" data-stylesheet="https://www.xiaocang.blog/pagefind/pagefind-component-ui.css" hidden>
+
+<pagefind-config bundle-path="https://www.xiaocang.blog/pagefind/" base-url="https://www.xiaocang.blog/" lang="zh-cn" no-worker></pagefind-config>
+<pagefind-input placeholder="搜索文章标题或正文"></pagefind-input>
+<pagefind-summary></pagefind-summary>
+<pagefind-results></pagefind-results>
+</div>
+<p id="search-status" class="search-status" role="status">正在加载搜索…</p>
+<button id="search-retry" class="button" type="button" hidden>重新加载</button>
+
+</div>
+</dialog>
+
+<script id="blog-comments-config" type="application/json">{"comments":true,"likes":true,"locale":"zh-CN","pageKey":"/p/b0e32d34-3dba-4cdc-8a01-0a8d197c09a4/","pageTitle":"开了 VPN，为什么网站还显示我原来的位置？","server":"https://upfqpobmiewm.sealosgzg.site","site":"xblog-14a0a1f5-ecfc-48c8-8c65-56b04cf6c1e1","views":true,"viewsBase":0}</script>
+
+</body></html>
